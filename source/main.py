@@ -15,9 +15,11 @@ from kivy.adapters.models import SelectableDataItem
 from kivy.lang import Builder
 from kivy.uix.label import Label
 from kivy.core.window import Window
+from kivy.uix.image import Image
+from kivymd.theming import ThemeManager
 
-reload(sys)  
-sys.setdefaultencoding('utf8')
+#reload(sys)  
+#sys.setdefaultencoding('utf8')
 kivy.require('1.9.1')
 
 Builder.load_file('main.kv')
@@ -68,7 +70,7 @@ class AnswersListItem(ToggleButtonBehavior, SelectableView, BoxLayout):
         return "%s(name=%r)" % (type(self).__name__, self.name)
 
     def on_state(self, me, state):
-        print me, state
+        #print me, state
         if state == "down":
             self.select()
         else:
@@ -125,6 +127,7 @@ class RootWidget(FloatLayout):
     This is Main Class
     
     '''    
+    text_color = [0,0,0,1]
     manager = ObjectProperty()
     txt_input_all = ObjectProperty()
     txt_input_rec = ObjectProperty()
@@ -141,6 +144,7 @@ class RootWidget(FloatLayout):
     ques={1:'Хвоя или листва?', 2:'Форма листьев?', 3:'Сложный или простой\n  лист по форме?', 4:'Цвет коры', 5:'Откуда первые\nбоковые веточки?', 6:'Чечевички', 7:'Древовидный ствол?', 8:'Окрас цветов', 9:'Цветы,\nкол-во лепестков', 10:'Цветы, форма', 11:'Плод-одиночный\nили гроздь?', 12:'Край листа', 13:'Тип соцветия', 14:'Щетинистые почки?', 15:'Расположение - \nпопарное или нет?', 16:'Есть ли "ножки"?'}
     answ = {1:['Хвоя','Листва'],2:['Широкоэллепти\nческий', 'Заостренный','Ланцетные','Эллиптический','Пальчатосложные','Пальчаторассе\nчённый','Игольчатая','Непарноперисто\nсложные','Игловидный','Яйцевидно\nланцетные','Овальные','Яйцевидно-\nромбические','Яйцевидно-\nтреугольные','Широко\nяйцевидные','Супротивные'],3:[],4:[],5:[],6:[],7:[],8:[],9:[],10:[],11:[],12:[],13:[],14:[],15:[],16:[]}
     item = []    
+    c = [1,1,1,0]
     
     for i,j in zip(Image_des,Image_dat):
         item.append((i,j))
@@ -200,16 +204,21 @@ class RootWidget(FloatLayout):
         pass
 
     def refresh_list(self):
-	self.txt_input_all.text = ""
-    	self.txt_input_rec.text = ""
-	self.lbl.text = ""
+        self.txt_input_all.text = ""
+        self.txt_input_rec.text = ""
+        self.lbl.text = ""
         self.lv.adapter.data = []
-	self.lst.adapter.data = []   
+        self.lst.adapter.data = []   
         self.lv.adapter.data.extend([DataItem(i, is_selected=False) for i in self.ques.values()])
         self.lv._trigger_reset_populate() 
         
+    def back(self):
+        self.manager.current = 'Screen 1'
+        #self.refresh_list()
+        
 class ActionApp(App):
     title = "Plants Recognizer"
+    theme_cls = ThemeManager()
     def build(self):
         self.root = RootWidget()
         return self.root
