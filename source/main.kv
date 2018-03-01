@@ -3,6 +3,9 @@
 #: import ListAdapter kivy.adapters.listadapter.ListAdapter
 #: import ListItemButton kivy.uix.listview.ListItemButton
 #: import Factory kivy.factory.Factory
+#: import get_color_from_hex kivy.utils.get_color_from_hex
+#: import Toolbar kivymd.toolbar.Toolbar
+
 
 #__________________________Image Class_____________________________________________
 <ImageListItem>:
@@ -17,6 +20,7 @@
             size: 100, 100
             source: root.img
         Label:
+			color: 0,0,0,1
             text: root.name
 	
 #__________________________Questions Class_____________________________________________
@@ -28,6 +32,7 @@
 
     BoxLayout:
         Label:
+			color: 0,0,0,1
             text: root.name
 			
 #__________________________Answers Class______________________________________________			
@@ -40,11 +45,13 @@
     BoxLayout:
 
         CheckBox:
+			color: 0,0,0,1
             on_state: root.is_selected = args[1] == "down"
             state: "down" if root.is_selected else "normal"
             size_hint_x: 0.1
 
         Label:
+			color: 0,0,0,1
             size_hint_x: 0.9
             text: root.name
 			
@@ -58,27 +65,13 @@
 	lv: LV
 	txt_input_all: my_text_input_1
 	txt_input_rec: my_text_input_2
-    ActionBar:
-        id: _action
-        size_hint: 1,0.1
-        pos_hint: {'top':1}
-        ActionView:
-			use_separator: True
-            ActionPrevious:
-                title: 'Plants Recognizer'
-                on_release: root.manager.current = 'Screen 1'
-                on_press: root.refresh_list()
-			ActionGroup:
-                text: 'About'
-                mode: 'spinner'
-                size_hint_x: None
-                width: 90
-                ActionButton:
-                    text: 'About'
-					on_press: root.manager.current = 'Screen 4'
-				ActionButton:
-                    text: 'Setting'
-					on_press: root.manager.current = 'Screen 5'
+	Toolbar:
+		title: "Toolbar"
+		pos_hint: {'top': 1}
+		md_bg_color: get_color_from_hex(colors['DeepPurple']['A400'])
+		background_palette: 'DeepPurple'
+		background_hue: 'A400'
+		left_action_items: [['arrow-left', lambda x: root.back()]]
 
     ScreenManager:
 #_________________________Start Screen______________________________________________
@@ -87,20 +80,68 @@
 		size_hint: 1,0.9
 		Screen:
 			name: 'Screen 1'
-			BoxLayout:
-				pos_hint: {'top':1}
-				size_hint_x: 1
-				size_hint_y: 1
-				orientation: 'vertical'
-				Button:
-					text: 'Start using'
-					on_press: root.manager.current = 'Screen 2'
-				Button:
-					text: 'Plants Catalogue'
-					on_press: root.manager.current = 'Screen 6'
-				Button:
-					text: 'How to use'
-					on_press: root.manager.current = 'Screen 7'   
+			MDFloatingActionButton:
+				id: float_act_btn
+				opposite_colors: False
+				elevation_normal: 0
+				elevation_raised: 0
+				pos_hint: {'center_x': 0.5,'center_y': 0.5}
+				size: dp(190),dp(190)
+				md_bg_color: root.c
+				padding: 0
+				on_press: root.manager.current = 'Screen 2'
+				Image:
+					source: 'data/icons/Start.ico'
+					
+			MDFloatingActionButton:
+				id: float_act_btn1
+				opposite_colors: False
+				elevation_normal: 0
+				elevation_raised: 0
+				pos_hint: {'center_x': 0.1, 'center_y': 0.1}
+				md_bg_color: root.c
+				padding: 0
+				#on_press: root.manager.current = 'Screen 2'
+				Image:
+					source: 'data/icons/popular.ico'
+            
+            
+			MDFloatingActionButton:
+				id: float_act_btn2
+				opposite_colors: False
+				elevation_normal: 0
+				elevation_raised: 0
+				pos_hint: {'center_x': 0.3, 'center_y': 0.1}
+				md_bg_color: root.c
+				padding: 0
+				on_press: root.manager.current = 'Screen 6'
+				Image:
+					source: 'data/icons/files.ico'
+					
+			MDFloatingActionButton:
+				id: float_act_btn3
+				opposite_colors: False
+				elevation_normal: 0
+				elevation_raised: 0
+				pos_hint: {'center_x': 0.7, 'center_y': 0.1}
+				md_bg_color: root.c
+				padding: 0
+				on_press: root.manager.current = 'Screen 5'
+				Image:
+					source: 'data/icons/Settings.ico'
+					
+					
+			MDFloatingActionButton:
+				id: float_act_btn3
+				opposite_colors: False
+				elevation_normal: 0
+				elevation_raised: 0
+				pos_hint: {'center_x': 0.9, 'center_y': 0.1}
+				md_bg_color: root.c
+				padding: 0
+				on_press: root.manager.current = 'Screen 4'
+				Image:
+					source: 'data/icons/Info.ico'  
 #________________________Recommended Questions Screen_______________________________________________
 
 		Screen:
@@ -110,19 +151,22 @@
 					size_hint_y: None
 					pos_hint: {'top':0.5}
 					Label:
+						color: root.text_color
 						text: 'Recommended Questions'
 				BoxLayout:
 					pos_hint: {'top':0.5}
 					size_hint_y: None
 					Label:
+						color: root.text_color
 						text: 'Answers'
 			BoxLayout:
-				pos_hint: {'top':1}
+				pos_hint: {'top':0.99}
 				height: '30dp'
 				size_hint_y: None
 				TextInput:
 					size_hint_x: 50  
 					id: my_text_input_2
+					color: root.text_color
 					hint_text: 'Search in Recommended'
 				Button:
 					text: 'Search'
@@ -143,6 +187,7 @@
 					size_hint_x: 0.5
 					ListView:
 						id: LV
+						markup: True
 						adapter: ListAdapter(data=root.data, cls=Factory.QuestionsListItem,args_converter=root.args_converter,selection_mode="multiple", propagate_selection_to_data=True)
 				BoxLayout:
 					orientation: 'vertical'
@@ -153,6 +198,7 @@
 						Label:
 							size_hint_x: 0.5
 							id: my_lable
+							color: root.text_color
 							text: ''
 					BoxLayout:
 						spacing: 25
@@ -168,7 +214,7 @@
 							text: 'Sumbit'
 							on_press: root.send_results()
 			BoxLayout:
-				pos_hint: {'top':1}
+				pos_hint: {'top':0.99}
 				height: '30dp'
 				size_hint_y: None
 				TextInput:
@@ -189,12 +235,14 @@
 			name: 'Screen 4'
 			BoxLayout:
 				Label:
+					color: root.text_color
 					text: 'Page About Developers\n Current version is 0.1'
 #_______________________Setting Screen__________________________________________________
 		Screen:
 			name: 'Screen 5'
 			BoxLayout:
 				Label:
+					color: root.text_color
 					text: 'Setting Page'
 #______________________Catalogue Screen_________________________________________________
 		Screen:
@@ -211,4 +259,5 @@
 			name: 'Screen 7'
 			BoxLayout:
 				Label:
+					color: root.text_color
 					text: 'How to use Page'
