@@ -5,9 +5,23 @@
 #: import Factory kivy.factory.Factory
 #: import get_color_from_hex kivy.utils.get_color_from_hex
 #: import Toolbar kivymd.toolbar.Toolbar
+#: import SmartTile kivymd.grid.SmartTile
+#: import MDLabel kivymd.label.MDLabel
+#: import MDCheckbox kivymd.selectioncontrols.MDCheckbox
 
-
-#__________________________Image Class_____________________________________________
+#__________________________Image Class New_____________________________________________
+<MyViewClass>:
+    BoxLayout:
+        SmartTileWithLabel:
+        	size_hint_x: 0.2
+            mipmap: True
+            source: root.image
+            text: root.text
+        Label:
+        	size_hint_x: 0.8
+            text: root.description
+            color: 0,0,0,1
+#__________________________Image Class Old_____________________________________________
 <ImageListItem>:
     height: 50
 
@@ -38,22 +52,21 @@
 #__________________________Answers Class______________________________________________			
 <AnswersListItem>:
     height: 115
-
-    on_state: root.is_selected = args[1] == "down"
-    state: "down" if root.is_selected else "normal"
-
+	
+	
     BoxLayout:
 
-        CheckBox:
-			color: 0,0,0,1
-            on_state: root.is_selected = args[1] == "down"
-            state: "down" if root.is_selected else "normal"
-            size_hint_x: 0.1
+        MDCheckbox:
+			group: 'test'
+			on_state: root.foo(args[0].active,root.name)
+            size_hint_x: 0.18
+			disabled: root.disabled
 
-        Label:
+        MDLabel:
 			color: 0,0,0,1
-            size_hint_x: 0.9
+            size_hint_x: 0.82
             text: root.name
+			disabled: root.disabled
 			
 #__________________________Main Class________________________________________________
 
@@ -89,9 +102,10 @@
 				size: dp(190),dp(190)
 				md_bg_color: root.c
 				padding: 0
+				icon: 'plus'
 				on_press: root.manager.current = 'Screen 2'
 				Image:
-					source: 'data/icons/Start.ico'
+					source: 'data/icons/Start.png'
 					
 			MDFloatingActionButton:
 				id: float_act_btn1
@@ -103,7 +117,7 @@
 				padding: 0
 				#on_press: root.manager.current = 'Screen 2'
 				Image:
-					source: 'data/icons/popular.ico'
+					source: 'data/icons/Popular.png'
             
             
 			MDFloatingActionButton:
@@ -116,7 +130,7 @@
 				padding: 0
 				on_press: root.manager.current = 'Screen 6'
 				Image:
-					source: 'data/icons/files.ico'
+					source: 'data/icons/Library.png'
 					
 			MDFloatingActionButton:
 				id: float_act_btn3
@@ -128,7 +142,7 @@
 				padding: 0
 				on_press: root.manager.current = 'Screen 5'
 				Image:
-					source: 'data/icons/Settings.ico'
+					source: 'data/icons/Settings.png'
 					
 					
 			MDFloatingActionButton:
@@ -141,7 +155,7 @@
 				padding: 0
 				on_press: root.manager.current = 'Screen 4'
 				Image:
-					source: 'data/icons/Info.ico'  
+					source: 'data/icons/Info.png'  
 #________________________Recommended Questions Screen_______________________________________________
 
 		Screen:
@@ -160,7 +174,7 @@
 						color: root.text_color
 						text: 'Answers'
 			BoxLayout:
-				pos_hint: {'top':0.99}
+				pos_hint: {'top':1}
 				height: '30dp'
 				size_hint_y: None
 				TextInput:
@@ -206,7 +220,7 @@
 						size_hint_x: 1
 						ListView:
 							id: my_list
-							adapter: ListAdapter(data=root.data2, cls=Factory.AnswersListItem, args_converter=root.args_converter, selection_mode="multiple", propagate_selection_to_data=True)
+							adapter: ListAdapter(data=root.data2, cls=Factory.AnswersListItem, args_converter=root.answers_args_converter)
 					BoxLayout:
 						size_hint_y: 0.1
 						size_hint_x: 1
@@ -214,7 +228,7 @@
 							text: 'Sumbit'
 							on_press: root.send_results()
 			BoxLayout:
-				pos_hint: {'top':0.99}
+				pos_hint: {'top':1}
 				height: '30dp'
 				size_hint_y: None
 				TextInput:
@@ -228,7 +242,7 @@
 				Button:
 					text: 'Go Back'
 					on_release: root.manager.current = 'Screen 2'
-                    on_press: root.refresh_list()
+                    #on_press: root.refresh_list()
 					size_hint_x: 35
 #_______________________About Screen____________________________________________________
 		Screen:
@@ -247,13 +261,22 @@
 #______________________Catalogue Screen_________________________________________________
 		Screen:
 			name: 'Screen 6'
-			BoxLayout:
-				size_hint_y: 1
-				pos_hint: {'top':1}
-				size_hint_x: 1
-				orientation: "vertical"
-				ListView:
-					adapter: ListAdapter(data=root.data3, cls=Factory.ImageListItem, args_converter=root.image_args_converter, selection_mode="multiple", propagate_selection_to_data=True)
+			ScrollView:
+				GridLayout:
+					cols: 3
+					row_default_height: (self.width - self.cols*self.spacing[0])/self.cols
+					MyRecycleView:
+						id: rv
+						viewclass: 'MyViewClass'
+						RecycleBoxLayout:
+							orientation: 'vertical'
+							default_size_hint: None,None
+							default_size: 300,100
+							height: self.minimum_height
+							padding: dp(4), dp(4)
+							spacing: dp(4)
+							size_hint_y: None
+							height: self.minimum_height
 #______________________How to use Screen_________________________________________________			
 		Screen:
 			name: 'Screen 7'

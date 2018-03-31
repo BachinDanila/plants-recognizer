@@ -1,19 +1,19 @@
 [app]
 
 # (str) Title of your application
-title = Plants Recognizer
+title = My Application
 
 # (str) Package name
-package.name = plantsrecognizer
+package.name = myapp
 
 # (str) Package domain (needed for android/ios packaging)
-package.domain = org.test.application
+package.domain = org.test
 
 # (str) Source code where the main.py live
 source.dir = .
 
 # (list) Source files to include (let empty to include all the files)
-source.include_exts = py,png,jpg,kv,atlas
+source.include_exts = py,png,jpg,kv,atlas,ttf
 
 # (list) List of inclusions using pattern matching
 #source.include_patterns = assets/*,images/*.png
@@ -22,7 +22,7 @@ source.include_exts = py,png,jpg,kv,atlas
 #source.exclude_exts = spec
 
 # (list) List of directory to exclude (let empty to not exclude anything)
-#source.exclude_dirs = tests, bin
+source.exclude_dirs = bin
 
 # (list) List of exclusions using pattern matching
 #source.exclude_patterns = license,images/*/*.jpg
@@ -36,14 +36,14 @@ version = 0.1
 
 # (list) Application requirements
 # comma seperated e.g. requirements = sqlite3,kivy
-requirements = kivy
+requirements = kivy, kivy==master, /root/KivyMD, /root/plyer
 
 # (str) Custom source folders for requirements
 # Sets custom source for any requirements with recipes
 # requirements.source.kivy = ../../kivy
 
 # (list) Garden requirements
-#garden_requirements =
+garden_requirements = recycleview
 
 # (str) Presplash of the application
 #presplash.filename = %(source.dir)s/data/presplash.png
@@ -81,7 +81,7 @@ fullscreen = 0
 #android.minapi = 9
 
 # (int) Android SDK version to use
-#android.sdk = 21
+#android.sdk = 20
 
 # (str) Android NDK version to use
 #android.ndk = 9c
@@ -101,9 +101,6 @@ fullscreen = 0
 # (str) python-for-android git clone directory (if empty, it will be automatically cloned from github)
 #android.p4a_dir =
 
-# (str) The directory in which python-for-android should look for your own build recipes (if any)
-#p4a.local_recipes =q
-
 # (list) python-for-android whitelist
 #android.p4a_whitelist =
 
@@ -111,9 +108,6 @@ fullscreen = 0
 # This can be useful to avoid excess Internet downloads or save time
 # when an update is due and you just want to test/build your package
 # android.skip_update = False
-
-# (str) Bootstrap to use for android builds (android_new only)
-# android.bootstrap = sdl2
 
 # (str) Android entry point, default is ok for Kivy-based app
 #android.entrypoint = org.renpy.android.PythonActivity
@@ -143,7 +137,7 @@ fullscreen = 0
 #android.manifest.intent_filters =
 
 # (list) Android additionnal libraries to copy into libs/armeabi
-#android.add_libs_armeabi = libs/android/*.so
+android.add_libs_armeabi = libs/android/*.so
 #android.add_libs_armeabi_v7a = libs/android-v7/*.so
 #android.add_libs_x86 = libs/android-x86/*.so
 #android.add_libs_mips = libs/android-mips/*.so
@@ -186,7 +180,7 @@ fullscreen = 0
 log_level = 2
 
 # (int) Display warning if buildozer is run as root (0 = False, 1 = True)
-warn_on_root = 1
+warn_on_root = 0
 
 # (str) Path to build artifact storage, absolute or relative to spec file
 # build_dir = ./.buildozer
