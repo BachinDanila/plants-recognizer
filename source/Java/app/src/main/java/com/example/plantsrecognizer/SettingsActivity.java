@@ -42,7 +42,6 @@ public class SettingsActivity extends PreferenceActivity {
         @Override
         public boolean onPreferenceChange(Preference preference, Object value) {
             String stringValue = value.toString();
-
             if (preference instanceof ListPreference) {
                 // For list preferences, look up the correct display value in
                 // the preference's 'entries' list.
@@ -132,7 +131,6 @@ public class SettingsActivity extends PreferenceActivity {
             actionBar.setDisplayHomeAsUpEnabled(true);
         }
     }
-
     /**
      * {@inheritDoc}
      */
@@ -160,12 +158,11 @@ public class SettingsActivity extends PreferenceActivity {
                 || DataSyncPreferenceFragment.class.getName().equals(fragmentName)
                 || NotificationPreferenceFragment.class.getName().equals(fragmentName);
     }
-
     /**
      * This fragment shows general preferences only. It is used when the
      * activity is showing a two-pane settings UI.
      */
-    @TargetApi(Build.VERSION_CODES.HONEYCOMB)
+    //@TargetApi(Build.VERSION_CODES.HONEYCOMB)
     public static class GeneralPreferenceFragment extends PreferenceFragment {
         @Override
         public void onCreate(Bundle savedInstanceState) {
@@ -177,8 +174,8 @@ public class SettingsActivity extends PreferenceActivity {
             // to their values. When their values change, their summaries are
             // updated to reflect the new value, per the Android Design
             // guidelines.
-            bindPreferenceSummaryToValue(findPreference("example_text"));
-            bindPreferenceSummaryToValue(findPreference("example_list"));
+            //PreferenceManager.getDefaultSharedPreferences().getInt("simplePreference", 0xffff0000);
+            //bindPreferenceSummaryToValue(findPreference("background_color_picker"));
         }
 
         @Override

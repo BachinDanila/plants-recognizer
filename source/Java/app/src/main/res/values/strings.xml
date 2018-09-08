@@ -15,6 +15,10 @@
 
     <!-- Strings related to Settings -->
 
+    <!-- Strings related to Theme settings-->
+    <string name="background_color_picker_title">Choose Theme Style</string>
+    <string name="background_color_picker_summary">Set Theme Style</string>
+
     <!-- Example General settings -->
     <string name="pref_header_general">General</string>
 
