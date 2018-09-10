@@ -20,7 +20,6 @@ public class MainActivity extends AppCompatActivity {
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
         mConstraintLayout = findViewById(R.id.constraintLayout);
         settings_button = findViewById(R.id.settings_button);
 

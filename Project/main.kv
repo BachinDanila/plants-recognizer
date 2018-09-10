@@ -8,12 +8,14 @@
 #: import SmartTile kivymd.grid.SmartTile
 #: import MDLabel kivymd.label.MDLabel
 #: import MDCheckbox kivymd.selectioncontrols.MDCheckbox
+#: import Shuffle random.shuffle
 
 #__________________________Image Class New_____________________________________________
 <MyViewClass>:
     BoxLayout:
         SmartTileWithLabel:
         	size: 150,150
+			on_press: root.pressed()
             mipmap: True
             source: root.image
             text: root.text
@@ -74,11 +76,16 @@
 	manager: manager
 	lbl: my_lable
 	lst: my_list
+	lbl_2: my_lable_2
+	lst_2: my_list_2
 	lv: LV
+	lv_2: LV_2
 	txt_input_all: my_text_input_1
 	txt_input_rec: my_text_input_2
+	toolbar: _toolbar
 	Toolbar:
-		title: "Toolbar"
+		title: 'PlantsRecognizer'
+		id: _toolbar
 		pos_hint: {'top': 1}
 		md_bg_color: get_color_from_hex(colors['DeepPurple']['A400'])
 		background_palette: 'DeepPurple'
@@ -102,7 +109,7 @@
 				md_bg_color: root.c
 				padding: 0
 				icon: 'plus'
-				on_press: root.manager.current = 'Screen 2'
+				on_press: root.press_button("Recommended Questions")
 				Image:
 					source: 'data/icons/Start.png'
 					
@@ -114,7 +121,7 @@
 				pos_hint: {'center_x': 0.1, 'center_y': 0.1}
 				md_bg_color: root.c
 				padding: 0
-				#on_press: root.manager.current = 'Screen 2'
+				#on_press: root.manager.current = 'Screen 2', root.toolbar_name = "Popular"
 				Image:
 					source: 'data/icons/Popular.png'
             
@@ -127,7 +134,7 @@
 				pos_hint: {'center_x': 0.3, 'center_y': 0.1}
 				md_bg_color: root.c
 				padding: 0
-				on_press: root.manager.current = 'Screen 6'
+				on_press: root.press_button("Catalogue")
 				Image:
 					source: 'data/icons/Library.png'
 					
@@ -139,7 +146,7 @@
 				pos_hint: {'center_x': 0.7, 'center_y': 0.1}
 				md_bg_color: root.c
 				padding: 0
-				on_press: root.manager.current = 'Screen 5'
+				on_press: root.press_button("Settings")
 				Image:
 					source: 'data/icons/Settings.png'
 					
@@ -152,7 +159,7 @@
 				pos_hint: {'center_x': 0.9, 'center_y': 0.1}
 				md_bg_color: root.c
 				padding: 0
-				on_press: root.manager.current = 'Screen 4'
+				on_press: root.press_button("Info")
 				Image:
 					source: 'data/icons/Info.png'  
 #________________________Recommended Questions Screen_______________________________________________
@@ -160,34 +167,55 @@
 		Screen:
 			name: 'Screen 2'
 			BoxLayout:
+				orientation: 'horizontal'
 				BoxLayout:
-					size_hint_y: None
-					pos_hint: {'top':0.5}
-					Label:
-						color: root.text_color
-						text: 'Recommended Questions'
+					size_hint_y: 0.9
+					pos_hint: {'top':0.9}
+					size_hint_x: 0.5
+					ListView:
+						id: LV_2
+						markup: True
+						adapter: ListAdapter(data=root.data_shuffle, cls=Factory.QuestionsListItem,args_converter=root.args_converter,selection_mode="multiple", propagate_selection_to_data=True)
 				BoxLayout:
-					pos_hint: {'top':0.5}
-					size_hint_y: None
-					Label:
-						color: root.text_color
-						text: 'Answers'
+					orientation: 'vertical'
+					pos_hint: {'top':1}
+					size_hint_x: 0.5
+					BoxLayout:
+						size_hint_y: 0.25
+						Label:
+							size_hint_x: 0.5
+							id: my_lable_2
+							color: root.text_color
+							text: ''
+					BoxLayout:
+						spacing: 25
+						size_hint_y: 0.8
+						size_hint_x: 1
+						ListView:
+							id: my_list_2
+							adapter: ListAdapter(data=root.data2, cls=Factory.AnswersListItem, args_converter=root.answers_args_converter)
+					BoxLayout:
+						size_hint_y: 0.1
+						size_hint_x: 1
+						Button:
+							text: 'Sumbit'
+							on_press: root.send_results()
 			BoxLayout:
 				pos_hint: {'top':0.992}
 				height: '30dp'
 				size_hint_y: None
 				TextInput:
-					size_hint_x: 50  
 					id: my_text_input_2
-					color: root.text_color
-					hint_text: 'Search in Recommended'
+					size_hint_x: 50 
+					hint_text: 'Search in Recommended'					
 				Button:
 					text: 'Search'
 					size_hint_x: 15
 					on_press: root.search_in_rec()
 				Button:
 					text: 'All Questions'
-					on_press: root.manager.current = 'Screen 3'
+					#on_press: root.refresh_list()
+					on_release: root.press_button("All Questions")
 					size_hint_x: 35
 #_______________________All Questions Screen________________________________________________
 		Screen:
@@ -201,7 +229,7 @@
 					ListView:
 						id: LV
 						markup: True
-						adapter: ListAdapter(data=root.data, cls=Factory.QuestionsListItem,args_converter=root.args_converter,selection_mode="multiple", propagate_selection_to_data=True)
+						adapter: ListAdapter(data=root.data_shuffle, cls=Factory.QuestionsListItem,args_converter=root.args_converter,selection_mode="multiple", propagate_selection_to_data=True)
 				BoxLayout:
 					orientation: 'vertical'
 					pos_hint: {'top':1}
@@ -240,8 +268,8 @@
 					on_press: root.search_in_all()
 				Button:
 					text: 'Go Back'
-					on_press: root.refresh_list()
-					on_release: root.manager.current = 'Screen 2'
+					#on_press: root.refresh_list()
+					on_release: root.press_button("Recommended Questions")
 					size_hint_x: 35
 #_______________________About Screen____________________________________________________
 		Screen:
@@ -249,21 +277,21 @@
 			BoxLayout:
 				Label:
 					color: root.text_color
-					text: 'Page About Developers\n Current version is 0.1'
+					text: 'Developer: Bachin Danila\n Email: bachindanila@yandex.ru\n Current version is 2.2'
 #_______________________Setting Screen__________________________________________________
 		Screen:
 			name: 'Screen 5'
 			BoxLayout:
 				Label:
 					color: root.text_color
-					text: 'Setting Page'
+					text: 'Setting Page \n Coming Soon'
 #______________________Catalogue Screen_________________________________________________
 		Screen:
 			name: 'Screen 6'
 			ScrollView:
 				GridLayout:
-					cols: 3
-					row_default_height: (self.width - self.cols*self.spacing[0])/self.cols
+					cols: 6
+					row_default_height: 10
 					MyRecycleView:
 						id: rv
 						viewclass: 'MyViewClass'
@@ -282,4 +310,15 @@
 			BoxLayout:
 				Label:
 					color: root.text_color
-					text: 'How to use Page'
+					text: 'How to use Page \n Coming Soon'
+#______________________Plant Info Screen_________________________________________________
+		Screen:
+			name: 'Screen 8'
+			ScrollView:
+				Label:
+					height: self.texture_size[1]
+					size_hint_y: None
+					text_size: self.width - dp(10), None
+					valign: 'top'
+					color: root.text_color
+					text: root.a
