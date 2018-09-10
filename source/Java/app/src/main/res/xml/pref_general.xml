@@ -1,7 +1,6 @@
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
 
     <com.rarepebble.colorpicker.ColorPreference
-        android:key="simplePreference"
-        android:title="1234"
-        android:defaultValue="#f00"/>
+        android:key="BackgroundColorPreference"
+        android:title="@string/background_color_picker_title"/>
 </PreferenceScreen>

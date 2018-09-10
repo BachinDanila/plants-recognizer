@@ -2,7 +2,7 @@ package com.example.plantsrecognizer;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.preference.PreferenceManager;
+import android.support.constraint.ConstraintLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -12,7 +12,8 @@ import android.view.View.OnClickListener;
 
 public class MainActivity extends AppCompatActivity {
 
-    Button settings_button;
+    public Button settings_button;
+    public static ConstraintLayout mConstraintLayout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -20,7 +21,9 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        mConstraintLayout = findViewById(R.id.constraintLayout);
         settings_button = findViewById(R.id.settings_button);
+
 
         OnClickListener onClick_Handler = new OnClickListener() {
             @Override
