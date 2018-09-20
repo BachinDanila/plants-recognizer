@@ -11,14 +11,16 @@
         android:theme="@style/AppTheme">
         <activity android:name=".MainActivity">
             <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+            <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity
-            android:name=".AboutActivity"
-            android:label="@string/about_title" />
         <activity
             android:name=".HowToUseActivity"
             android:label="@string/how_to_use_title" />
@@ -32,8 +34,9 @@
             android:name=".Catalogue"
             android:label="@string/catalogue_title" />
         <activity
-            android:name=".SettingsActivity"
-            android:label="@string/title_activity_settings"></activity>
+            android:name=".ThemePreferenceActivity"
+            android:label="@string/title_activity_settings"/>
+
     </application>
 
 </manifest>

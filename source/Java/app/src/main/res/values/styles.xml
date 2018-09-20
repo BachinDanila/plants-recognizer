@@ -8,5 +8,16 @@
         <item name="colorAccent">@color/colorAccent</item>
     </style>
 
+    <style name="Theme1">
+        <item name="textColor">@color/green_apple</item>
+        <item name="background">@color/Theme1_background</item>
+        <item name="textSize">15sp</item>
+    </style>
+
+    <style name="Theme2">
+        <item name="textColor">@color/sky_blue</item>
+        <item name="background">@color/Theme2_background</item>
+        <item name="textSize">35sp</item>
+    </style>
 
 </resources>
