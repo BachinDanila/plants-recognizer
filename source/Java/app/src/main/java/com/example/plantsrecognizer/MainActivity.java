@@ -13,8 +13,10 @@ import android.view.View.OnClickListener;
 public class MainActivity extends AppCompatActivity {
 
     private int SETTINGS_ACTION = 1;
-    public Button settings_button;
+    private Button settings_button;
+    private Button catalogue_button;
 
+    
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
@@ -44,6 +46,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         settings_button = findViewById(R.id.settings_button);
+        catalogue_button = findViewById(R.id.catalogue_button);
 
         OnClickListener onClick_Handler = new OnClickListener() {
             @Override
@@ -52,6 +55,10 @@ public class MainActivity extends AppCompatActivity {
                     case R.id.settings_button:
                         startActivityForResult(new Intent(MainActivity.this, ThemePreferenceActivity.class), SETTINGS_ACTION);
                         break;
+
+                    case R.id.catalogue_button:
+                        Intent intent = new Intent(MainActivity.this, Catalogue.class);
+                        startActivity(intent);
 //
 //                    case R.id.how_to_use_button:
 //                        Intent how_to_use_intent = new Intent(MainActivity.this, HowToUseActivity.class);
@@ -70,6 +77,7 @@ public class MainActivity extends AppCompatActivity {
                 }
             }
         };
+        catalogue_button.setOnClickListener(onClick_Handler);
         settings_button.setOnClickListener(onClick_Handler);
     }
     @Override
