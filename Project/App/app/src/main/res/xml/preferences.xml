@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:background="?attr/background">
+    <PreferenceCategory android:title="Theme">
+        <ListPreference
+            android:defaultValue="@string/def_theme"
+            android:entries="@array/themes"
+            android:entryValues="@array/themes"
+            android:key="theme"
+            android:title="@string/theme_dialog_title"
+            android:summary="@string/theme_summary"
+            android:dialogTitle="@string/theme_dialog_title"/>
+    </PreferenceCategory>
+
+    <PreferenceCategory android:title="General">
+        <ListPreference
+            android:defaultValue="A"
+            android:key="gallery"
+            android:summary="@string/gallery_summary"
+            android:entries="@array/gallery"
+            android:entryValues="@array/gallery"
+            android:title="@string/title_gallery_storage" />
+
+    </PreferenceCategory>
+
+    <PreferenceCategory android:title="@string/pref_header_about">
+
+        <Preference
+            android:selectable="false"
+            android:summary="@string/summary_about" />
+
+        <Preference
+            android:summary="@string/app_version"
+            android:title="@string/title_version" />
+
+    </PreferenceCategory>
+
+</PreferenceScreen>
