@@ -1,6 +1,6 @@
 package com.example.plantsrecognizer;
 
-import android.app.Activity;
+import android.support.v7.app.AppCompatActivity;
 import android.text.Html;
 
 import org.json.JSONException;
@@ -11,11 +11,11 @@ import java.util.HashMap;
 
 public class JsonParseContent {
 
-    private Activity activity;
+    private AppCompatActivity activity;
 
     ArrayList<HashMap<String, String>> arraylist;
 
-    public JsonParseContent(Activity activity) {
+    public JsonParseContent(AppCompatActivity activity) {
         this.activity = activity;
     }
 

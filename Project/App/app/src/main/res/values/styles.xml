@@ -1,23 +1,27 @@
 <resources>
 
     <!-- Base application theme. -->
-    <style name="AppTheme" parent="Base.Theme.AppCompat.Light.DarkActionBar">
+    <style name="AppTheme" parent="Theme.AppCompat.Light">
         <!-- Customize your theme here. -->
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
+
+        <item name="textColor">@color/accent_light</item>
+        <item name="background">@color/sky_blue</item>
+        <item name="textSize">15sp</item>
     </style>
 
-    <style name="Theme1">
+    <style name="Theme1" parent="Theme.AppCompat.Light">
         <item name="textColor">@color/green_apple</item>
         <item name="background">@color/Theme1_background</item>
         <item name="textSize">15sp</item>
     </style>
 
-    <style name="Theme2">
+    <style name="Theme2" parent="Theme.AppCompat.Light">
         <item name="textColor">@color/sky_blue</item>
         <item name="background">@color/Theme2_background</item>
-        <item name="textSize">35sp</item>
+        <item name="textSize">15sp</item>
     </style>
 
 </resources>

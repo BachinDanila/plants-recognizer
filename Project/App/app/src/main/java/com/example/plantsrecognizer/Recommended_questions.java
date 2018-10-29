@@ -1,9 +1,9 @@
 package com.example.plantsrecognizer;
 
-import android.app.Activity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 
-public class Recommended_questions extends Activity {
+public class Recommended_questions extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState){
         super.onCreate(savedInstanceState);

@@ -1,9 +1,9 @@
 package com.example.plantsrecognizer;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
@@ -16,7 +16,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-public class Catalogue extends Activity {
+public class Catalogue extends AppCompatActivity {
 
     ListView listView;
     MyListAdapterJson JsonAdapter;

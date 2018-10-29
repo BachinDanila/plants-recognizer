@@ -10,7 +10,7 @@ import android.view.View;
 import android.widget.Button;
 import android.view.View.OnClickListener;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity{
 
     private int SETTINGS_ACTION = 1;
     private Button settings_button;
