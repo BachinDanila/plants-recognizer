@@ -66,7 +66,7 @@ public class MyListAdapterJson extends BaseAdapter {
         }
         JsonModel thisJsonModel = JsonModelArrayList.get(position);
         String source = thisJsonModel.getSource();
-        new ImageLoadTask(source, holder.ImageView).execute();
+        new ImageLoadTask(source, holder.ImageView, context).execute();
 
         holder.TextViewTitle.setText(thisJsonModel.getTitle());
         holder.TextViewDescription.setText(thisJsonModel.getDescription());

@@ -93,7 +93,6 @@ public class Catalogue extends AppCompatActivity {
         }
     }
 
-
     private void onTaskCompleted(String response, int serviceCode) {
         Log.d("responsejson", response);
         Log.d("service_code",Integer.toString(serviceCode));
