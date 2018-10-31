@@ -10,8 +10,8 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 
 public class ImageLoadTask extends AsyncTask<Void, Void, Bitmap> {
-    private String url;
-    private ImageView imageView;
+    private final String url;
+    private final ImageView imageView;
 
     public ImageLoadTask(String url, ImageView imageView) {
         this.url = url;
@@ -27,8 +27,7 @@ public class ImageLoadTask extends AsyncTask<Void, Void, Bitmap> {
             connection.setDoInput(true);
             connection.connect();
             InputStream input = connection.getInputStream();
-            Bitmap myBitmap = BitmapFactory.decodeStream(input);
-            return myBitmap;
+            return BitmapFactory.decodeStream(input);
         } catch (Exception e) {
             e.printStackTrace();
         }

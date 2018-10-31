@@ -11,8 +11,8 @@ import android.widget.TextView;
 import java.util.ArrayList;
 
 public class MyListAdapterJson extends BaseAdapter {
-    private Context context;
-    private ArrayList<JsonModel> JsonModelArrayList;
+    private final Context context;
+    private final ArrayList<JsonModel> JsonModelArrayList;
 
     public MyListAdapterJson(Context context, ArrayList<JsonModel> JsonModelArrayList) {
 
@@ -56,9 +56,9 @@ public class MyListAdapterJson extends BaseAdapter {
 
             convertView = inflater.inflate(R.layout.row_custom_list, null, true);
 
-            holder.ImageView = (ImageView) convertView.findViewById(R.id.imageView);
-            holder.TextViewTitle = (TextView) convertView.findViewById(R.id.textViewTitle);
-            holder.TextViewDescription = (TextView) convertView.findViewById(R.id.textViewDescription);
+            holder.ImageView = convertView.findViewById(R.id.imageView);
+            holder.TextViewTitle = convertView.findViewById(R.id.textViewTitle);
+            holder.TextViewDescription = convertView.findViewById(R.id.textViewDescription);
             convertView.setTag(holder);
         }else {
             // the getTag returns the viewHolder object set as a tag to the view

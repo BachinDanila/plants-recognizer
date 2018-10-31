@@ -19,17 +19,28 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class HttpRequest {
-    //Supported HttpRequest methods
-    public static enum Method{
-        POST,PUT,DELETE,GET;
-    }
-    private URL url;
-    private HttpURLConnection con;
-    private OutputStream os;
+    private final URL url;
     //After instantiation, when opening connection - IOException can occur
-    public HttpRequest(URL url)throws IOException {
+    private HttpRequest(URL url) throws IOException {
         this.url=url;
         con = (HttpURLConnection)this.url.openConnection();
+    }
+
+    private HttpURLConnection con;
+    private OutputStream os;
+
+    /**
+     * Writes query to open stream to server
+     *
+     * @param query String params in format of key1=v1&key2=v2 to open stream to server
+     * @return HttpRequest this instance -> for chaining method @see line 22
+     * @throws IOException - should be checked by caller
+     */
+    private HttpRequest withData(String query) throws IOException {
+        BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(os, "UTF-8"));
+        writer.write(query);
+        writer.close();
+        return this;
     }
     //Can be instantiated with String representation of url, force caller to check for IOException which can be thrown
     public HttpRequest(String url)throws IOException{ this(new URL(url)); Log.d("parameters", url); }
@@ -80,18 +91,9 @@ public class HttpRequest {
         return this;
     }
 
-    /**
-     * Writes query to open stream to server
-     *
-     * @param query String params in format of key1=v1&key2=v2 to open stream to server
-     * @return HttpRequest this instance -> for chaining method @see line 22
-     * @throws IOException - should be checked by caller
-     * */
-    public HttpRequest withData(String query) throws IOException{
-        BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(os, "UTF-8"));
-        writer.write(query);
-        writer.close();
-        return this;
+    //Supported HttpRequest methods
+    public enum Method {
+        POST, PUT, DELETE, GET
     }
     /**
      * Builds query on format of key1=v1&key2=v2 from given hashMap structure

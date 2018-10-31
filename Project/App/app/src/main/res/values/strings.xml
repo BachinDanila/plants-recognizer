@@ -27,5 +27,6 @@
     <string name="summary_about">We are a team of like-minded people, specialized in development of Android App Development creating new trends across the app space. Glad to Help in anyway!</string>
     <string name="app_version">3.5</string>
     <string name="title_version">Version</string>
+    <string name="all_question_button">All Questions</string>
 
 </resources>

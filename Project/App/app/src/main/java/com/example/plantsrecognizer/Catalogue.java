@@ -10,24 +10,20 @@ import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.Toast;
 
-import org.json.JSONException;
-
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 
 public class Catalogue extends AppCompatActivity {
 
-    ListView listView;
+    final String raw_url = "https://ru.m.wikipedia.org/w/api.php?action=query&prop=pageimages|extracts|pageterms&titles=%s&piprop=original|name|thumbnail&pithumbsize=150&continue=&format=json&formatversion=2";
     MyListAdapterJson JsonAdapter;
-    ArrayList<JsonModel> jsonModelList;
-
+    XlsParser xls_parser;
+    private ListView listView;
     private JsonParseContent parseContent;
     private final int jsoncode = 1;
     JsonModel jsonModel;
-
-    String raw_url = "https://ru.m.wikipedia.org/w/api.php?action=query&prop=pageimages|extracts|pageterms&titles=%s&piprop=original|name|thumbnail&pithumbsize=150&continue=&format=json&formatversion=2";
-    String plants_list[] = {"Берёза","Тополь"};
+    private ArrayList<JsonModel> jsonModelList;
+    private String[] plants_list;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,18 +31,15 @@ public class Catalogue extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.catalogue);
 
-        listView = (ListView) findViewById(R.id.listView);
+        listView = findViewById(R.id.listView);
         parseContent = new JsonParseContent(this);
         jsonModelList = new ArrayList<>();
 
-        try {
-            for(int i = 0; i< plants_list.length;i++){
-                parseJson(String.format(raw_url,plants_list[i]));
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-        } catch (JSONException e) {
-            e.printStackTrace();
+        xls_parser = new XlsParser(this);
+        plants_list = xls_parser.getXls_plants();
+
+        for (int i = 0; i < plants_list.length; i++) {
+            parseJson(String.format(raw_url, plants_list[i]));
         }
     }
 
@@ -60,7 +53,7 @@ public class Catalogue extends AppCompatActivity {
         Log.v("End ","_____________________________________________________________");
     }
 
-    private void parseJson(final String URL) throws IOException, JSONException {
+    private void parseJson(final String URL) {
 
         if (!JsonUtils.isNetworkAvailable(Catalogue.this)) {
             Toast.makeText(Catalogue.this, "Internet is required!", Toast.LENGTH_SHORT).show();
@@ -81,23 +74,24 @@ public class Catalogue extends AppCompatActivity {
             }
             protected void onPostExecute(String result) {
                 //do something with response
-                Log.d("newwwss",result);
+                //Log.d("newwwss",result);
                 onTaskCompleted(result,jsoncode);
             }
         }.execute();
     }
-    public void onTaskCompleted(String response, int serviceCode) {
-        Log.d("responsejson", response.toString());
+
+    private void onTaskCompleted(String response, int serviceCode) {
+        Log.d("responsejson", response);
         Log.d("service_code",Integer.toString(serviceCode));
         switch (serviceCode) {
             case jsoncode:
-                JsonUtils.removeSimpleProgressDialog();  //will remove progress dialog
                 jsonModel = parseContent.getInfo(response);
                 jsonModelList.add(jsonModel);
 
                 if(jsonModelList.size() == plants_list.length){
                     JsonAdapter = new MyListAdapterJson(this,jsonModelList);
                     listView.setAdapter(JsonAdapter);
+                    JsonUtils.removeSimpleProgressDialog();  //will remove progress dialog
                     listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 
                         public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
@@ -114,6 +108,7 @@ public class Catalogue extends AppCompatActivity {
                         }
                     });
                 }
+                break;
         }
     }
 }

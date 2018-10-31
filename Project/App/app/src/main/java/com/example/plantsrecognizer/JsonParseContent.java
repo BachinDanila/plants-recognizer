@@ -11,15 +11,15 @@ import java.util.HashMap;
 
 public class JsonParseContent {
 
-    private AppCompatActivity activity;
+    final AppCompatActivity activity;
 
-    ArrayList<HashMap<String, String>> arraylist;
+    private ArrayList<HashMap<String, String>> arraylist;
 
     public JsonParseContent(AppCompatActivity activity) {
         this.activity = activity;
     }
 
-    public String parse_extracts(char string[]){
+    private String parse_extracts(char string[]) {
         String new_string = "";
         for(int i = 0; i < string.length; i++){
             if(string[i] == '\n'){

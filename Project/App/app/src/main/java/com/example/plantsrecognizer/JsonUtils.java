@@ -8,8 +8,8 @@ import android.net.NetworkInfo;
 public class JsonUtils {
     private static ProgressDialog mProgressDialog;
 
-    public static void showSimpleProgressDialog(Context context, String title,
-                                                String msg, boolean isCancelable) {
+    private static void showSimpleProgressDialog(Context context, String title,
+                                                 String msg, boolean isCancelable) {
         try {
             if (mProgressDialog == null) {
                 mProgressDialog = ProgressDialog.show(context, title, msg);

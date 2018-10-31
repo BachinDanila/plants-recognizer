@@ -14,14 +14,15 @@ public class ThemePreferenceActivity extends PreferenceActivity {
         super.onCreate(savedInstanceState);
         addPreferencesFromResource(R.xml.preferences);
         findPreference("theme").
-                setOnPreferenceChangeListener(new RefershActivityOnPreferenceChangeListener(RESULT_CODE_THEME_UPDATED));
+                setOnPreferenceChangeListener(new RefreshActivityOnPreferenceChangeListener(RESULT_CODE_THEME_UPDATED));
         findPreference("gallery").
-                setOnPreferenceChangeListener(new RefershActivityOnPreferenceChangeListener(RESULT_CODE_GALLERY_UPDATED));
+                setOnPreferenceChangeListener(new RefreshActivityOnPreferenceChangeListener(RESULT_CODE_GALLERY_UPDATED));
     }
 
-    private class RefershActivityOnPreferenceChangeListener implements OnPreferenceChangeListener {
+    private class RefreshActivityOnPreferenceChangeListener implements OnPreferenceChangeListener {
         private final int resultCode;
-        public RefershActivityOnPreferenceChangeListener(int resultCode) {
+
+        public RefreshActivityOnPreferenceChangeListener(int resultCode) {
             this.resultCode = resultCode;
         }
 
