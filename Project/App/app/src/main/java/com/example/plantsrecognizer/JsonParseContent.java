@@ -19,8 +19,20 @@ public class JsonParseContent {
         this.activity = activity;
     }
 
+    private String charArrayToString(char string[], int max_index) {
+        String new_string = "";
+        for (int i = 0; i < max_index; i++) {
+            new_string += string[i];
+        }
+        return new_string;
+    }
+
     private String parse_extracts(char string[]) {
         String new_string = "";
+        int max_limit = 159;
+        int tmp = max_limit;
+        int counter = 0;
+
         for(int i = 0; i < string.length; i++){
             if(string[i] == '\n'){
                 break;
@@ -34,10 +46,45 @@ public class JsonParseContent {
             }
             new_string += string[i];
         }
+        if (new_string.length() > max_limit) {
+            string = new_string.toCharArray();
+            for (int i = max_limit; i >= 0; i--) {
+                if (string[i] == '.') {
+                    tmp = i;
+                    break;
+                }
+            }
+            if (tmp == max_limit) {
+                for (int i = tmp; i >= 0; i--)
+                    if (string[i] == ' ' || string[i] == ',') {
+                        counter++;
+                        if (counter == 2) {
+                            tmp = i;
+                            break;
+                        }
+                    }
+                string[tmp] = '.';
+                tmp++;
+                string[tmp] = '.';
+                tmp++;
+                string[tmp] = '.';
+                tmp++;
+            }
+            new_string = charArrayToString(string, tmp);
+        }
+        try {
+            string = new_string.toCharArray();
+            string[0] = Character.toUpperCase(string[0]);
+            new_string = charArrayToString(string, string.length);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         return new_string;
     }
+
     public JsonModel getInfo(String response) {
         JsonModel jsonModel = new JsonModel();
+        int limit = 20;
         try {
             JSONObject jsonObject = new JSONObject(response);
             arraylist = new ArrayList<HashMap<String, String>>();
@@ -47,13 +94,19 @@ public class JsonParseContent {
             try{
                 JSONObject description_dataobj = all_dataobj.getJSONObject("terms");
                 String description_row = description_dataobj.getString(JsonConstants.Params.DESCRIPTION);
-                String description = description_row.substring(2,description_row.length() - 2);
-                jsonModel.setDescription(description);
+                char[] description = description_row.substring(2, description_row.length() - 2).toCharArray();
+
+                if (description.length <= limit) {      //Если очень маленькое описание.
+                    throw new JSONException("Small Description");
+                } else {
+                    description[0] = Character.toUpperCase(description[0]);
+                    jsonModel.setDescription(charArrayToString(description, description.length));
+                }
             }catch (JSONException e){
                 String extracts = all_dataobj.getString(JsonConstants.Params.EXTRACTS);
                 extracts = Html.fromHtml(extracts).toString();
                 String description = parse_extracts(extracts.toCharArray());
-                //Log.v("Extracts",description);
+                //Log.v("WIKI_DATA_EXTRACTS",description);
                 jsonModel.setDescription(description);
             }
 

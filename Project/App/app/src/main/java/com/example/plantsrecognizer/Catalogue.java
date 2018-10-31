@@ -1,5 +1,6 @@
 package com.example.plantsrecognizer;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -10,6 +11,7 @@ import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.Toast;
 
+import java.io.FileOutputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -80,11 +82,24 @@ public class Catalogue extends AppCompatActivity {
         }.execute();
     }
 
+    private void write_file(String filename, JsonModel jsonModel) {
+        FileOutputStream outputStream;
+        try {
+            outputStream = openFileOutput(filename, Context.MODE_PRIVATE);
+            outputStream.write(jsonModel.getBytes());
+            outputStream.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+
     private void onTaskCompleted(String response, int serviceCode) {
         Log.d("responsejson", response);
         Log.d("service_code",Integer.toString(serviceCode));
         switch (serviceCode) {
             case jsoncode:
+
                 jsonModel = parseContent.getInfo(response);
                 jsonModelList.add(jsonModel);
 

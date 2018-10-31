@@ -61,4 +61,9 @@ public class JsonModel {
         this.description = description;
     }
 
+    public byte[] getBytes() {
+        String result_string = title + ";" + description + ";" + source;
+        return result_string.getBytes();
+    }
+
 }
