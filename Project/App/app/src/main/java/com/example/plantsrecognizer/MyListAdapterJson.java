@@ -64,12 +64,16 @@ public class MyListAdapterJson extends BaseAdapter {
             // the getTag returns the viewHolder object set as a tag to the view
             holder = (ViewHolder)convertView.getTag();
         }
-        JsonModel thisJsonModel = JsonModelArrayList.get(position);
-        String source = thisJsonModel.getSource();
-        new ImageLoadTask(source, holder.ImageView, context).execute();
+        try {
+            JsonModel thisJsonModel = JsonModelArrayList.get(position);
+            String source = thisJsonModel.getSource();
+            new ImageLoadTask(source, holder.ImageView, context).execute();
 
-        holder.TextViewTitle.setText(thisJsonModel.getTitle());
-        holder.TextViewDescription.setText(thisJsonModel.getDescription());
+            holder.TextViewTitle.setText(thisJsonModel.getTitle());
+            holder.TextViewDescription.setText(thisJsonModel.getDescription());
+        } catch (NullPointerException e) {
+            e.printStackTrace();
+        }
 
         return convertView;
     }

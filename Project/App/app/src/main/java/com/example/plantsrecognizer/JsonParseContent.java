@@ -82,6 +82,18 @@ public class JsonParseContent {
         return new_string;
     }
 
+    public String getTitle(String response) {
+        try {
+            JSONObject jsonObject = new JSONObject(response);
+            JSONObject all_dataobj = jsonObject.getJSONObject("query").getJSONArray("pages").getJSONObject(0);
+            String title = all_dataobj.getString(JsonConstants.Params.TITLE);
+            return title;
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
     public JsonModel getInfo(String response) {
         JsonModel jsonModel = new JsonModel();
         int limit = 20;

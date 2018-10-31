@@ -17,7 +17,9 @@ public class WebViewActivity extends AppCompatActivity {
         Intent intent = getIntent();
         String Title = intent.getStringExtra("Title");
 
-        MyWebView webView = (MyWebView) findViewById(R.id.myWebView);
+        setTitle(Title);
+
+        MyWebView webView = findViewById(R.id.myWebView);
 
         WebSettings webSettings = webView.getSettings();
         webSettings.setJavaScriptEnabled(true);
