@@ -16,22 +16,29 @@ import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.Toast;
 
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-public class Catalogue extends AppCompatActivity {
+public class Catalogue extends AppCompatActivity implements Serializable {
 
     final String raw_url = "https://ru.m.wikipedia.org/w/api.php?action=query&prop=pageimages|extracts|pageterms&titles=%s&piprop=original|name|thumbnail&pithumbsize=150&continue=&format=json&formatversion=2";
-    MyListAdapterJson JsonAdapter;
+    private static final long serialVersionUID = 1L;
+    transient MyListAdapterJson JsonAdapter;
     XlsParser xls_parser;
     JsonModel jsonModel;
     ThemeHandler handler;
 
-    private ListView listView;
-    private JsonParseContent parseContent;
+    private transient ListView listView;
+    private transient JsonParseContent parseContent;
     private final int jsoncode = 1;
-    private ArrayList<JsonModel> jsonModelList = null;
-    private ArrayList<JsonModel> json_model_list = null;
+    private transient ArrayList<JsonModel> jsonModelList = null;
+    private transient ArrayList<JsonModel> json_model_list = null;
     private String[] plants_list = null;
 
     @Override
@@ -104,16 +111,43 @@ public class Catalogue extends AppCompatActivity {
         switch (serviceCode) {
             case jsoncode:
                 jsonModel = parseContent.getInfo(response);
+                write_file(jsonModel.getTitle(), jsonModel);
                 jsonModelList.add(jsonModel);
 
                 if(jsonModelList.size() == plants_list.length){
-                    if (json_model_list == null)
-                        json_model_list = jsonModelList;
                     JsonUtils.removeSimpleProgressDialog();  //will remove progress dialog
                     ListAdapterInit(jsonModelList);
                 }
                 break;
         }
+    }
+
+    private void write_file(String filename, JsonModel object) {
+        try {
+            FileOutputStream fos = openFileOutput(filename, Context.MODE_PRIVATE);
+            ObjectOutputStream os = new ObjectOutputStream(fos);
+            os.writeObject(object);
+            os.close();
+            fos.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private JsonModel read_jsonModel(String filename) {
+        try {
+            FileInputStream fis = openFileInput(filename);
+            ObjectInputStream is = new ObjectInputStream(fis);
+            JsonModel jsonmodel = (JsonModel) is.readObject();
+            is.close();
+            fis.close();
+            return jsonmodel;
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 
     private void ListAdapterInit(ArrayList<JsonModel> jsonModelList) {
@@ -177,6 +211,8 @@ public class Catalogue extends AppCompatActivity {
         if (JsonAdapter.getCount() == 0) {
             Toast toast = Toast.makeText(this, "Not Found", Toast.LENGTH_SHORT);
             toast.show();
+            JsonModel model = read_jsonModel("Бук");
+            Log.d("SERIALISED", model.getTitle());
         }
     }
 

@@ -1,7 +1,10 @@
 package com.example.plantsrecognizer;
 
-public class JsonModel {
+import java.io.Serializable;
 
+public class JsonModel implements Serializable {
+
+    private static final long serialVersionUID = 1L;
     private String title = "";
     private String description = "";
     private String source = "";

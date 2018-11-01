@@ -11,6 +11,7 @@ import android.widget.TextView;
 import java.util.ArrayList;
 
 public class MyListAdapterJson extends BaseAdapter {
+
     private final Context context;
     private final ArrayList<JsonModel> JsonModelArrayList;
 

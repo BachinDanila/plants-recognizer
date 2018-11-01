@@ -5,9 +5,12 @@ import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 import android.util.Log;
 
-public class ThemeHandler {
+import java.io.Serializable;
+
+public class ThemeHandler implements Serializable {
 
     private Context context;
+    private static final long serialVersionUID = 1L;
 
     public ThemeHandler(Context current) {
         context = current;
