@@ -23,15 +23,20 @@ public class Catalogue extends AppCompatActivity {
     final String raw_url = "https://ru.m.wikipedia.org/w/api.php?action=query&prop=pageimages|extracts|pageterms&titles=%s&piprop=original|name|thumbnail&pithumbsize=150&continue=&format=json&formatversion=2";
     MyListAdapterJson JsonAdapter;
     XlsParser xls_parser;
+    JsonModel jsonModel;
+    ThemeHandler handler;
+
     private ListView listView;
     private JsonParseContent parseContent;
     private final int jsoncode = 1;
-    JsonModel jsonModel;
     private ArrayList<JsonModel> jsonModelList;
     private String[] plants_list;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
+        handler = new ThemeHandler(this);
+        handler.Handle();
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.catalogue);
@@ -67,7 +72,7 @@ public class Catalogue extends AppCompatActivity {
         JsonUtils.showSimpleProgressDialog(Catalogue.this);
         new AsyncTask<Void, Void, String>(){
             protected String doInBackground(Void[] params) {
-                String response="";
+                String response;
                 HashMap<String, String> map=new HashMap<>();
                 try {
                     HttpRequest req = new HttpRequest(URL);
@@ -101,27 +106,19 @@ public class Catalogue extends AppCompatActivity {
     }
 
     private JsonModel read_file(String filename) throws FileNotFoundException {
-        byte[] buffer = new byte[1000];
+        byte[] buffer = new byte[500];
         JsonModel jsonModel_raw = new JsonModel();
         InputStream input = openFileInput(filename);
         // read fills buffer with data and returns
-        // the number of bytes read (which of course
-        // may be less than the buffer size, but
-        // it will never be more).
-        int total = 0;
-        int nRead = 0;
         try {
-            while ((nRead = input.read(buffer)) != -1) {
-                // Convert to String so we can display it.
-                // Of course you wouldn't want to do this with
-                // a 'real' binary file.
-                String[] data = buffer_processing(new String(buffer));
-                jsonModel_raw.setDescription(data[0]);
-                jsonModel_raw.setSource(data[1]);
-                jsonModel_raw.setTitle(filename);
-                //Log.v("BUFFER",data[0] + " " + data[1]);
-                total += nRead;
+            while (input.read(buffer) != -1) {
             }
+
+            String[] data = buffer_processing(new String(buffer));
+            jsonModel_raw.setDescription(data[0]);
+            jsonModel_raw.setSource(data[1]);
+            jsonModel_raw.setTitle(filename);
+
             input.close();
         } catch (IOException e) {
             e.printStackTrace();

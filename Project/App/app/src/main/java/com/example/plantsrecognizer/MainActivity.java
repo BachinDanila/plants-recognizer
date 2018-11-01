@@ -1,11 +1,8 @@
 package com.example.plantsrecognizer;
 
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
@@ -13,6 +10,8 @@ import android.widget.Button;
 public class MainActivity extends AppCompatActivity{
 
     private final int SETTINGS_ACTION = 1;
+    ThemeHandler handler;
+
     Button settings_button;
     Button catalogue_button;
     Button all_questions_button;
@@ -20,10 +19,8 @@ public class MainActivity extends AppCompatActivity{
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
-        SharedPreferences pref = PreferenceManager
-                .getDefaultSharedPreferences(this);
-
-        ThemeHandler(pref);
+        handler = new ThemeHandler(this);
+        handler.Handle();
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
@@ -70,22 +67,5 @@ public class MainActivity extends AppCompatActivity{
             }
         }
         super.onActivityResult(requestCode, resultCode, data);
-    }
-
-    private void ThemeHandler(SharedPreferences pref) {
-        String themeName = pref.getString("theme", "AppTheme");
-        String galleryName = pref.getString("gallery", "A");
-
-        if (themeName.equals("Theme1")) {
-            setTheme(R.style.Theme1);
-        } else if (themeName.equals("Theme2")) {
-            //Toast.makeText(this, "Theme has been reset to " + themeName, Toast.LENGTH_SHORT).show();
-            setTheme(R.style.Theme2);
-        } else if (themeName.equals("AppTheme")) {
-            setTheme(R.style.AppTheme);
-        }
-
-        Log.v("Gallery: ", galleryName);
-        Log.v("themeName", themeName);
     }
 }

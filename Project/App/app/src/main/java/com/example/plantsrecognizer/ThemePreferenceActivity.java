@@ -6,11 +6,17 @@ import android.preference.Preference.OnPreferenceChangeListener;
 import android.preference.PreferenceActivity;
 
 public class ThemePreferenceActivity extends PreferenceActivity {
+
     public static final int RESULT_CODE_THEME_UPDATED = 1;
     public static final int RESULT_CODE_GALLERY_UPDATED = 1;
 
+    ThemeHandler handler;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
+        setTheme(R.style.AppTheme);
+
         super.onCreate(savedInstanceState);
         addPreferencesFromResource(R.xml.preferences);
         findPreference("theme").
