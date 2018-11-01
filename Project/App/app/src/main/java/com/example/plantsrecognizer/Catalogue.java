@@ -17,6 +17,7 @@ import android.widget.ListView;
 import android.widget.Toast;
 
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
@@ -38,7 +39,6 @@ public class Catalogue extends AppCompatActivity implements Serializable {
     private transient JsonParseContent parseContent;
     private final int jsoncode = 1;
     private transient ArrayList<JsonModel> jsonModelList = null;
-    private transient ArrayList<JsonModel> json_model_list = null;
     private String[] plants_list = null;
 
     @Override
@@ -53,18 +53,23 @@ public class Catalogue extends AppCompatActivity implements Serializable {
         handleIntent(getIntent());
 
         listView = findViewById(R.id.listView);
-        parseContent = new JsonParseContent(this);
         jsonModelList = new ArrayList<>();
 
         xls_parser = new XlsParser(this);
         plants_list = xls_parser.getXls_plants();
 
-        if (json_model_list == null) {
+        try {
+            for (int i = 0; i < plants_list.length; i++) {
+                jsonModelList.add(read_jsonModel(plants_list[i]));
+            }
+            JsonUtils.showSimpleProgressDialog(Catalogue.this);
+            ListAdapterInit(jsonModelList);
+        } catch (FileNotFoundException e) {
+            jsonModelList.clear();
+            parseContent = new JsonParseContent(this);
             for (int i = 0; i < plants_list.length; i++) {
                 parseJson(String.format(raw_url, plants_list[i]));
             }
-        } else {
-            ListAdapterInit(json_model_list);
         }
     }
 
@@ -115,7 +120,6 @@ public class Catalogue extends AppCompatActivity implements Serializable {
                 jsonModelList.add(jsonModel);
 
                 if(jsonModelList.size() == plants_list.length){
-                    JsonUtils.removeSimpleProgressDialog();  //will remove progress dialog
                     ListAdapterInit(jsonModelList);
                 }
                 break;
@@ -134,9 +138,9 @@ public class Catalogue extends AppCompatActivity implements Serializable {
         }
     }
 
-    private JsonModel read_jsonModel(String filename) {
+    private JsonModel read_jsonModel(String filename) throws FileNotFoundException {
+        FileInputStream fis = openFileInput(filename);
         try {
-            FileInputStream fis = openFileInput(filename);
             ObjectInputStream is = new ObjectInputStream(fis);
             JsonModel jsonmodel = (JsonModel) is.readObject();
             is.close();
@@ -144,28 +148,35 @@ public class Catalogue extends AppCompatActivity implements Serializable {
             return jsonmodel;
         } catch (IOException e) {
             e.printStackTrace();
-        } catch (ClassNotFoundException e) {
-            e.printStackTrace();
+        } catch (ClassNotFoundException ex) {
+            ex.printStackTrace();
         }
         return null;
     }
 
     private void ListAdapterInit(ArrayList<JsonModel> jsonModelList) {
         JsonAdapter = new MyListAdapterJson(this, jsonModelList);
+        JsonAdapter.notifyDataSetChanged();
         listView.setAdapter(JsonAdapter);
+        try {
+            JsonUtils.removeSimpleProgressDialog();  //will remove progress dialog
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-
-                Object o = listView.getItemAtPosition(position);
-                JsonModel thisJsonModel = (JsonModel) o;
-                String Title = thisJsonModel.getTitle();
-
-                //Toast.makeText(getBaseContext(),Title,Toast.LENGTH_SHORT).show();
-
-                Intent intent = new Intent(Catalogue.this, WebViewActivity.class);
-                intent.putExtra("Title", Title);
-                startActivity(intent);
+                try {
+                    Object o = listView.getItemAtPosition(position);
+                    JsonModel thisJsonModel = (JsonModel) o;
+                    String Title = thisJsonModel.getTitle();
+                    //Toast.makeText(getBaseContext(),Title,Toast.LENGTH_SHORT).show();
+                    Intent intent = new Intent(Catalogue.this, WebViewActivity.class);
+                    intent.putExtra("Title", Title);
+                    startActivity(intent);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
             }
         });
     }
@@ -211,8 +222,14 @@ public class Catalogue extends AppCompatActivity implements Serializable {
         if (JsonAdapter.getCount() == 0) {
             Toast toast = Toast.makeText(this, "Not Found", Toast.LENGTH_SHORT);
             toast.show();
-            JsonModel model = read_jsonModel("Бук");
-            Log.d("SERIALISED", model.getTitle());
+            try {
+                for (int i = 0; i < plants_list.length; i++) {
+                    JsonAdapter.addItem(read_jsonModel(plants_list[i]));
+                }
+            } catch (FileNotFoundException e) {
+                e.printStackTrace();
+            }
+            //Log.d("SERIALISED", model.getTitle());
         }
     }
 

@@ -47,6 +47,7 @@ public class MyListAdapterJson extends BaseAdapter {
 
     public void addItem(JsonModel jsonModel) {
         JsonModelArrayList.add(jsonModel);
+        this.notifyDataSetChanged();
     }
 
     @Override
