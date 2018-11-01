@@ -15,8 +15,6 @@ public class ThemePreferenceActivity extends PreferenceActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
-        setTheme(R.style.AppTheme);
-
         super.onCreate(savedInstanceState);
         addPreferencesFromResource(R.xml.preferences);
         findPreference("theme").

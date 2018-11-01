@@ -2,9 +2,9 @@
 <resources>
 
     <string-array name="themes">
-        <item>Theme1</item>
-        <item>Theme2</item>
-        <item>AppTheme</item>
+        <item>Light</item>
+        <item>Dark</item>
+        <item>Default</item>
     </string-array>
 
     <string-array name="gallery">

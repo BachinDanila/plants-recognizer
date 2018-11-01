@@ -7,8 +7,13 @@ import android.webkit.WebSettings;
 
 public class WebViewActivity extends AppCompatActivity {
 
+    ThemeHandler handler;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
+        handler = new ThemeHandler(this);
+        handler.Handle();
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.row_my_web);
