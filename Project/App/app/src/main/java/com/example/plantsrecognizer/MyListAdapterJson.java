@@ -40,6 +40,14 @@ public class MyListAdapterJson extends BaseAdapter {
         return JsonModelArrayList.get(position);
     }
 
+    public void removeItem(int position) {
+        JsonModelArrayList.remove(position);
+    }
+
+    public void addItem(JsonModel jsonModel) {
+        JsonModelArrayList.add(jsonModel);
+    }
+
     @Override
     public long getItemId(int position) {
         return 0;

@@ -29,4 +29,6 @@
     <string name="title_version">Version</string>
     <string name="all_question_button">All Questions</string>
 
+    <string name="search_hint">Search</string>
+
 </resources>
