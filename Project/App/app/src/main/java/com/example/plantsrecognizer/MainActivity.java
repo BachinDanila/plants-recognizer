@@ -5,16 +5,16 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.widget.Button;
+import android.widget.ImageButton;
 
 public class MainActivity extends AppCompatActivity{
 
     private final int SETTINGS_ACTION = 1;
     ThemeHandler handler;
 
-    Button settings_button;
-    Button catalogue_button;
-    Button all_questions_button;
+    ImageButton settings_button;
+    ImageButton catalogue_button;
+    ImageButton all_questions_button;
     
     @Override
     protected void onCreate(Bundle savedInstanceState) {

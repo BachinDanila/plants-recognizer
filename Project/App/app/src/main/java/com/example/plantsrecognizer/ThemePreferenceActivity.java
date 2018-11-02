@@ -19,8 +19,6 @@ public class ThemePreferenceActivity extends PreferenceActivity {
         addPreferencesFromResource(R.xml.preferences);
         findPreference("theme").
                 setOnPreferenceChangeListener(new RefreshActivityOnPreferenceChangeListener(RESULT_CODE_THEME_UPDATED));
-        findPreference("gallery").
-                setOnPreferenceChangeListener(new RefreshActivityOnPreferenceChangeListener(RESULT_CODE_GALLERY_UPDATED));
     }
 
     private class RefreshActivityOnPreferenceChangeListener implements OnPreferenceChangeListener {

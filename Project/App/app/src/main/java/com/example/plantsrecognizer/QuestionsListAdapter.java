@@ -105,4 +105,14 @@ public class QuestionsListAdapter extends BaseExpandableListAdapter {
 
         return convertView;
     }
+
+    public void removeGroup(QuestionModel questionModel) {
+        questionsArrayList.remove(questionModel);
+        notifyDataSetChanged();
+    }
+
+    public void addGroup(QuestionModel questionModel) {
+        questionsArrayList.add(questionModel);
+        notifyDataSetChanged();
+    }
 }

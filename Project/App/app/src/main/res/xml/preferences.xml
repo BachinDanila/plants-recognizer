@@ -13,22 +13,13 @@
             android:dialogTitle="@string/theme_dialog_title"/>
     </PreferenceCategory>
 
-    <PreferenceCategory android:title="General">
-        <ListPreference
-            android:defaultValue="A"
-            android:key="gallery"
-            android:summary="@string/gallery_summary"
-            android:entries="@array/gallery"
-            android:entryValues="@array/gallery"
-            android:title="@string/title_gallery_storage" />
-
-    </PreferenceCategory>
 
     <PreferenceCategory android:title="@string/pref_header_about">
 
         <Preference
             android:selectable="false"
-            android:summary="@string/summary_about" />
+            android:summary="bachindanila@yandex.ru"
+            android:title="Mail" />
 
         <Preference
             android:summary="@string/app_version"
