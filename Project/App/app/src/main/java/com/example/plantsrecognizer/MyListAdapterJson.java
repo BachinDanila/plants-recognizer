@@ -25,9 +25,9 @@ public class MyListAdapterJson extends BaseAdapter {
     public int getViewTypeCount() {
         return getCount();
     }
+
     @Override
     public int getItemViewType(int position) {
-
         return position;
     }
 

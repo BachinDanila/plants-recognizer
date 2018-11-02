@@ -56,7 +56,7 @@ public class Catalogue extends AppCompatActivity implements Serializable {
         jsonModelList = new ArrayList<>();
 
         xls_parser = new XlsParser(this);
-        plants_list = xls_parser.getXls_plants();
+        plants_list = xls_parser.getXlsPlants();
 
         try {
             for (int i = 0; i < plants_list.length; i++) {
