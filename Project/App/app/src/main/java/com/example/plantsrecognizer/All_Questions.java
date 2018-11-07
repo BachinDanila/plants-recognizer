@@ -12,7 +12,6 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ExpandableListView;
-import android.widget.ListView;
 import android.widget.Toast;
 
 import java.io.FileInputStream;
@@ -26,23 +25,19 @@ import java.util.ArrayList;
 
 public class All_Questions extends AppCompatActivity implements Serializable {
 
-    private ThemeHandler handler;
     private static final long serialVersionUID = 1L;
-    transient QuestionsListAdapter questionsAdapter;
+    transient QuestionsAdapter questionsAdapter;
 
     XlsParser xls;
     QuestionModel questionModel;
 
-    private transient ListView listView;
     private transient ArrayList<QuestionModel> questionModelList = null;
     private transient String[] allQuestions;
-    private transient ExpandableListView expandableListView;
-    private transient String filename;
 
     @Override
     protected void onCreate(Bundle savedInstanceState){
 
-        handler = new ThemeHandler(this);
+        ThemeHandler handler = new ThemeHandler(this);
         handler.Handle();
 
         super.onCreate(savedInstanceState);
@@ -55,8 +50,7 @@ public class All_Questions extends AppCompatActivity implements Serializable {
         questionModelList = new ArrayList<>();
 
         try {
-            for (int i = 0; i < allQuestions.length; i++) {
-                filename = allQuestions[i];
+            for (String filename : allQuestions) {
                 questionModelList.add(readQuestionModel(filename));
             }
         } catch (FileNotFoundException exc) {
@@ -67,25 +61,49 @@ public class All_Questions extends AppCompatActivity implements Serializable {
                     questionModel.setAnswers(xls.getXlsAnswers(question));
                     questionModelList.add(questionModel);
                     write_file(questionModel);
-                    //Log.d("QUESTIONMODEL", question + " " + xls.getXlsAnswers(question).size());
                 }
             } catch (Exception e) {
                 e.printStackTrace();
                 e.getCause();
             }
+        } catch (Exception e) {
+            e.printStackTrace();
         }
 
-        expandableListView = findViewById(R.id.expandableListView);
-        questionsAdapter = new QuestionsListAdapter(this, questionModelList);
-        expandableListView.setAdapter(questionsAdapter);
+        final AnimatedExpandableListView listView = findViewById(R.id.expandableListView);
+        questionsAdapter = new QuestionsAdapter(this);
+        questionsAdapter.setData(questionModelList);
+        listView.setAdapter(questionsAdapter);
 
-        expandableListView.setOnChildClickListener(new ExpandableListView.OnChildClickListener() {
+        listView.setOnChildClickListener(new ExpandableListView.OnChildClickListener() {
 
             @Override
             public boolean onChildClick(ExpandableListView parent, View v, int groupPos, int childPos, long id) {
-                Toast.makeText(getApplicationContext(), questionModelList.get(groupPos).getAnswers().get(childPos), Toast.LENGTH_SHORT).show();
+                QuestionModel current = questionModelList.get(groupPos);
+                current.setSelectedAnswer(current.getAnswer(childPos));
+                Toast.makeText(getApplicationContext(), current.getQuestion() +
+                        current.getSelectedAnswer(), Toast.LENGTH_SHORT).show();
                 return false;
             }
+        });
+
+        // In order to show animations, we need to use a custom click handler
+        // for our ExpandableListView.
+        listView.setOnGroupClickListener(new ExpandableListView.OnGroupClickListener() {
+
+            @Override
+            public boolean onGroupClick(ExpandableListView parent, View v, int groupPosition, long id) {
+                // We call collapseGroupWithAnimation(int) and
+                // expandGroupWithAnimation(int) to animate group
+                // expansion/collapse.
+                if (listView.isGroupExpanded(groupPosition)) {
+                    listView.collapseGroupWithAnimation(groupPosition);
+                } else {
+                    listView.expandGroupWithAnimation(groupPosition);
+                }
+                return true;
+            }
+
         });
     }
 
@@ -107,7 +125,7 @@ public class All_Questions extends AppCompatActivity implements Serializable {
         int len = questionsAdapter.getGroupCount();
         for (int j = 0; j < len; j++) {
             for (int i = 0; i < questionsAdapter.getGroupCount(); i++) {
-                QuestionModel current = (QuestionModel) questionsAdapter.getGroup(i);
+                QuestionModel current = questionsAdapter.getGroup(i);
                 String text = current.getQuestion().toLowerCase();
                 Log.d("SEARCH", text + " " + keyword);
                 if (!text.contains(keyword.toLowerCase())) {
@@ -119,8 +137,8 @@ public class All_Questions extends AppCompatActivity implements Serializable {
             Toast toast = Toast.makeText(this, "Not Found", Toast.LENGTH_SHORT);
             toast.show();
             try {
-                for (int i = 0; i < allQuestions.length; i++) {
-                    questionsAdapter.addGroup(readQuestionModel(allQuestions[i]));
+                for (String allQuestion : allQuestions) {
+                    questionsAdapter.addGroup(readQuestionModel(allQuestion));
                 }
             } catch (FileNotFoundException e) {
                 e.printStackTrace();
@@ -149,10 +167,8 @@ public class All_Questions extends AppCompatActivity implements Serializable {
             is.close();
             fis.close();
             return model;
-        } catch (IOException e) {
+        } catch (IOException | ClassNotFoundException e) {
             e.printStackTrace();
-        } catch (ClassNotFoundException ex) {
-            ex.printStackTrace();
         }
         return null;
     }
@@ -170,6 +186,7 @@ public class All_Questions extends AppCompatActivity implements Serializable {
             searchView = (SearchView) searchItem.getActionView();
         }
         if (searchView != null) {
+            assert searchManager != null;
             searchView.setSearchableInfo(searchManager.getSearchableInfo(getComponentName()));
         }
         return super.onCreateOptionsMenu(menu);

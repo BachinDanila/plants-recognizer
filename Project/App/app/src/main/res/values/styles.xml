@@ -1,15 +1,14 @@
 <resources>
-
     <!-- Base application theme. -->
     <style name="Default" parent="Theme.AppCompat.Light">
         <!-- Customize your theme here. -->
-        <item name="colorPrimary">@color/colorPrimary</item>
-        <item name="colorPrimaryDark">@color/sky_blue</item>
-        <item name="colorAccent">@color/colorAccent</item>
+        <item name="colorPrimary">@color/colorPrimary1</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryDark1</item>
+        <item name="colorAccent">@color/colorAccent1</item>
 
         <item name="textColor">@color/primary_dark_light</item>
-        <item name="background">@color/sky_blue</item>
-        <item name="textSize">15sp</item>
+        <item name="background">@color/white</item>
+        <item name="textSize">25sp</item>
     </style>
 
     <style name="Light" parent="Theme.AppCompat.Light">

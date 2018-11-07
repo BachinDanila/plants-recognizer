@@ -21,12 +21,13 @@
         android:background="@drawable/ripple_oval"
         android:backgroundTint="@android:color/transparent"
         android:clickable="true"
-        android:elevation="1dp"
         android:scaleType="center"
         android:src="@drawable/ic_start"
+        android:focusable="true"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
+        android:saveEnabled="false"
         app:layout_constraintTop_toTopOf="parent" />
 
     <ImageButton
@@ -40,9 +41,11 @@
         android:layout_marginBottom="16dp"
         android:background="@drawable/ripple_oval"
         android:backgroundTint="?attr/background"
-        android:clickable="true"
         android:scaleType="center"
-        android:src="@drawable/settings"
+        android:clickable="false"
+        android:focusable="false"
+        android:saveEnabled="false"
+        android:src="@drawable/ic_settings"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -59,10 +62,12 @@
         android:layout_marginBottom="16dp"
         android:background="@drawable/ripple_oval"
         android:backgroundTint="?attr/background"
-        android:clickable="true"
+        android:clickable="false"
         android:scaleType="center"
         android:src="@drawable/ic_library"
+        android:focusable="false"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        android:saveEnabled="false"
         app:layout_constraintTop_toTopOf="parent" />
 </android.support.constraint.ConstraintLayout>

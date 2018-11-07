@@ -15,8 +15,9 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
+import java.util.Objects;
 
-public class XlsParser {
+class XlsParser {
 
     private ArrayList<String> xlsQuestions = new ArrayList<>();
     private ArrayList<String> xlsPlants = new ArrayList<>();
@@ -33,8 +34,8 @@ public class XlsParser {
         setXlsAnswers(file_init(0));
     }
 
-    public String[] getXlsQuestions() {
-        return xlsQuestions.toArray(new String[xlsQuestions.size()]);
+    String[] getXlsQuestions() {
+        return xlsQuestions.toArray(new String[xlsPlants.size()]);
     }
 
     private void setXlsQuestions(Sheet sheet) {
@@ -52,7 +53,7 @@ public class XlsParser {
         }
     }
 
-    public String[] getXlsPlants() {
+    String[] getXlsPlants() {
         return xlsPlants.toArray(new String[xlsPlants.size()]);
     }
 
@@ -68,7 +69,7 @@ public class XlsParser {
         }
     }
 
-    public ArrayList<String> getXlsAnswers(String key) {
+    ArrayList<String> getXlsAnswers(String key) {
         return xlsAnswers.get(key);
     }
 
@@ -78,22 +79,15 @@ public class XlsParser {
         Workbook wb = null;
         try {
             wb = WorkbookFactory.create(ins);
-        } catch (IOException e) {
-            e.printStackTrace();
-        } catch (InvalidFormatException e) {
+        } catch (IOException | InvalidFormatException e) {
             e.printStackTrace();
         }
         //перем первую страницу
-        return wb.getSheetAt(pageNumber);
-    }
-
-    private String getCurrentQuestion(int index, Sheet sheet) {
-        Row row = sheet.getRow(0);
-        return row.getCell(index).getStringCellValue();
+        return Objects.requireNonNull(wb).getSheetAt(pageNumber);
     }
 
     private void setXlsAnswers(Sheet sheet) {
-        String raw_string = null;
+        String raw_string;
         index_max = 30;
         try {
             for (int i = 1; i <= number_of_questions; i++) {
@@ -101,20 +95,27 @@ public class XlsParser {
                     Row row = sheet.getRow(j);
                     try {
                         raw_string = row.getCell(i).getStringCellValue();
+                        if (!raw_string.equals("-")) {
+                            raw_string = setFirstSymUpper(raw_string);
+                        } else {
+                            raw_string = "Не знаю/Не могу определить";
+                        }
                     } catch (IllegalStateException e) {
-                        raw_string = Double.toString(row.getCell(i).getNumericCellValue());
+                        raw_string = Integer.toString((int) row.getCell(i).getNumericCellValue());
                     }
-                    if (raw_string.equals("-"))
-                        raw_string = "Не знаю/Не могу определить";
                     if (raw_string.contains(",")) {
-                        set.addAll(Arrays.asList(raw_string.split(",")));
+                        String[] raw_array = raw_string.split(",");
+                        for (String element : raw_array) {
+                            set.add(setFirstSymUpper(element));
+                        }
                     } else {
                         set.add(raw_string);
                     }
                 }
 
-                if (xlsQuestions.get(i - 1).equals("Древовидный ли свол")) {
-                    set.add("не древовидный");
+                if (xlsQuestions.get(i - 1).equals("Древовидный ли ствол")) {
+                    set.add("Не древовидный");
+                    set.add("Не знаю/Не могу определить");
                 }
 
                 xlsAnswers.put(xlsQuestions.get(i - 1), new ArrayList<>(Arrays.asList(set.toArray(new String[set.size()]))));
@@ -123,5 +124,11 @@ public class XlsParser {
         } catch (Exception ex) {
             ex.printStackTrace();
         }
+    }
+
+    private String setFirstSymUpper(String raw_string) {
+        char[] tmp = raw_string.toCharArray();
+        tmp[0] = Character.toUpperCase(tmp[0]);
+        return new String(tmp);
     }
 }

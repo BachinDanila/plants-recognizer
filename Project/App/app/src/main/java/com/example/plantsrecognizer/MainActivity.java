@@ -1,10 +1,14 @@
 package com.example.plantsrecognizer;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.ImageButton;
 
 public class MainActivity extends AppCompatActivity{
@@ -15,7 +19,11 @@ public class MainActivity extends AppCompatActivity{
     ImageButton settings_button;
     ImageButton catalogue_button;
     ImageButton all_questions_button;
-    
+
+    private Animation mEnlargeAnimation;
+    private Animation mShrinkAnimation;
+
+    @SuppressLint("ClickableViewAccessibility")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
@@ -29,7 +37,10 @@ public class MainActivity extends AppCompatActivity{
         catalogue_button = findViewById(R.id.catalogue_button);
         all_questions_button = findViewById(R.id.all_questions_button);
 
-        OnClickListener onClick_Handler = new OnClickListener() {
+        mEnlargeAnimation = AnimationUtils.loadAnimation(this, R.anim.button_animation_zoom);
+        mShrinkAnimation = AnimationUtils.loadAnimation(this, R.anim.button_animation_original);
+
+        OnClickListener onClickHandler = new OnClickListener() {
             @Override
             public void onClick(View v) {
                 switch (v.getId()) {
@@ -42,25 +53,73 @@ public class MainActivity extends AppCompatActivity{
                         break;
 
                     case R.id.all_questions_button:
+                        //all_questions_button.startAnimation(mShrinkAnimation);
+                        //all_questions_button.clearAnimation();
                         startActivity(new Intent(MainActivity.this, All_Questions.class));
                         break;
                 }
             }
         };
-        catalogue_button.setOnClickListener(onClick_Handler);
-        settings_button.setOnClickListener(onClick_Handler);
-        all_questions_button.setOnClickListener(onClick_Handler);
+
+        catalogue_button.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                switch (event.getAction()) {
+                    case MotionEvent.ACTION_DOWN:
+                        catalogue_button.startAnimation(mEnlargeAnimation);
+                        break;
+
+                    case MotionEvent.ACTION_UP:
+                        v.performClick();
+                        break;
+                }
+                return true;
+            }
+        });
+
+        settings_button.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                switch (event.getAction()) {
+                    case MotionEvent.ACTION_DOWN:
+                        settings_button.startAnimation(mEnlargeAnimation);
+                        break;
+
+                    case MotionEvent.ACTION_UP:
+                        v.performClick();
+                        break;
+                }
+                return true;
+            }
+        });
+
+        all_questions_button.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                switch (event.getAction()) {
+                    case MotionEvent.ACTION_DOWN:
+                        all_questions_button.startAnimation(mEnlargeAnimation);
+                        //Log.d("DISTANCE",Float.toString(event.getDownTime()));
+                        break;
+                    case MotionEvent.ACTION_UP:
+                        //all_questions_button.clearAnimation();
+                        //onEnterAnimationComplete();
+                        v.performClick();
+                        break;
+                }
+                return true;
+            }
+        });
+
+        catalogue_button.setOnClickListener(onClickHandler);
+        settings_button.setOnClickListener(onClickHandler);
+        all_questions_button.setOnClickListener(onClickHandler);
 
     }
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == SETTINGS_ACTION) {
             if (resultCode == ThemePreferenceActivity.RESULT_CODE_THEME_UPDATED) {
-                finish();
-                startActivity(getIntent());
-                return;
-            }
-            if (resultCode == ThemePreferenceActivity.RESULT_CODE_GALLERY_UPDATED){
                 finish();
                 startActivity(getIntent());
                 return;
