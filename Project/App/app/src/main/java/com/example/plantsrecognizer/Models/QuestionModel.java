@@ -1,4 +1,4 @@
-package com.example.plantsrecognizer;
+package com.example.plantsrecognizer.Models;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -11,56 +11,56 @@ public class QuestionModel implements Serializable {
     private int numberOfSelectedAnswers = 0;
     private String selectedAnswer;
 
-    String getQuestion() {
+    public String getQuestion() {
         return this.question;
     }
 
-    void setQuestion(String question) {
+    public void setQuestion(String question) {
         this.question = question;
     }
 
-    ArrayList<String> getAnswers() {
+    public ArrayList<String> getAnswers() {
         return this.answers;
     }
 
-    void setAnswers(ArrayList<String> answers) {
+    public void setAnswers(ArrayList<String> answers) {
         this.answers = answers;
     }
 
-    int countAnswers() {
+    public int countAnswers() {
         return this.answers.size();
     }
 
-    String getAnswer(int index) {
+    public String getAnswer(int index) {
         return this.answers.get(index);
     }
 
-    void addAnswer(int index, String element) {
+    public void addAnswer(int index, String element) {
         this.answers.add(index, element);
     }
 
-    int getSelectedCount() {
+    public int getSelectedCount() {
         return numberOfSelectedAnswers;
     }
 
-    void setSelectedCount(int number) {
+    public void setSelectedCount(int number) {
         this.numberOfSelectedAnswers = number;
     }
 
-    String getSelectedAnswer() {
+    public String getSelectedAnswer() {
         return this.selectedAnswer;
     }
 
-    void setSelectedAnswer(String answer) {
+    public void setSelectedAnswer(String answer) {
         this.selectedAnswer = answer;
     }
 
     @Override
     public String toString() {
-        String finalString = question + " ";
+        StringBuilder finalString = new StringBuilder(question + " ");
         for (String element : answers) {
-            finalString += element + " ";
+            finalString.append(element).append(" ");
         }
-        return finalString;
+        return finalString.toString();
     }
 }

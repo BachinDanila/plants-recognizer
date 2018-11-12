@@ -1,4 +1,4 @@
-package com.example.plantsrecognizer;
+package com.example.plantsrecognizer.Utils;
 
 import android.webkit.WebResourceRequest;
 import android.webkit.WebView;
@@ -10,6 +10,5 @@ public class MyWebViewClient extends WebViewClient {
     public boolean shouldOverrideUrlLoading(WebView view, WebResourceRequest request) {
         view.loadUrl(request.getUrl().toString());
         return true;
-
     }
 }

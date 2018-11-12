@@ -1,6 +1,9 @@
-package com.example.plantsrecognizer;
+package com.example.plantsrecognizer.Utils;
 
 import android.content.Context;
+import android.support.annotation.NonNull;
+
+import com.example.plantsrecognizer.R;
 
 import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
 import org.apache.poi.ss.usermodel.Row;
@@ -17,13 +20,13 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Objects;
 
-class XlsParser {
+public class XlsParser {
 
     private ArrayList<String> xlsQuestions = new ArrayList<>();
     private ArrayList<String> xlsPlants = new ArrayList<>();
     private Map<String, ArrayList<String>> xlsAnswers = new HashMap<>();
     private HashSet<String> set = new HashSet<>();
-    private int index_max = 30; //количество растений;
+    private final int index_max = 30;         //количество растений;
     private int number_of_questions;
     private Context context;
 
@@ -34,7 +37,7 @@ class XlsParser {
         setXlsAnswers(file_init(0));
     }
 
-    String[] getXlsQuestions() {
+    public String[] getXlsQuestions() {
         return xlsQuestions.toArray(new String[xlsPlants.size()]);
     }
 
@@ -42,8 +45,8 @@ class XlsParser {
         try {
             //читаем первое поле
             Row row = sheet.getRow(0);
-            index_max = row.getPhysicalNumberOfCells();
-            for (int i = 1; i < index_max; i++) {
+            int tmp = row.getPhysicalNumberOfCells();
+            for (int i = 1; i < tmp; i++) {
                 xlsQuestions.add(row.getCell(i).getStringCellValue());
             }
             //Log.d("XLS: ", xls_names.toString());
@@ -53,7 +56,7 @@ class XlsParser {
         }
     }
 
-    String[] getXlsPlants() {
+    public String[] getXlsPlants() {
         return xlsPlants.toArray(new String[xlsPlants.size()]);
     }
 
@@ -69,7 +72,7 @@ class XlsParser {
         }
     }
 
-    ArrayList<String> getXlsAnswers(String key) {
+    public ArrayList<String> getXlsAnswers(String key) {
         return xlsAnswers.get(key);
     }
 
@@ -88,7 +91,6 @@ class XlsParser {
 
     private void setXlsAnswers(Sheet sheet) {
         String raw_string;
-        index_max = 30;
         try {
             for (int i = 1; i <= number_of_questions; i++) {
                 for (int j = 1; j < index_max; j++) {
@@ -126,6 +128,7 @@ class XlsParser {
         }
     }
 
+    @NonNull
     private String setFirstSymUpper(String raw_string) {
         char[] tmp = raw_string.toCharArray();
         tmp[0] = Character.toUpperCase(tmp[0]);

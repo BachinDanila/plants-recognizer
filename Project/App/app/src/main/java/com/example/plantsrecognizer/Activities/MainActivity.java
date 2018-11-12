@@ -1,4 +1,4 @@
-package com.example.plantsrecognizer;
+package com.example.plantsrecognizer.Activities;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
@@ -11,23 +11,25 @@ import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.ImageButton;
 
+import com.example.plantsrecognizer.R;
+import com.example.plantsrecognizer.Utils.PreferenceHandler;
+
 public class MainActivity extends AppCompatActivity{
 
     private final int SETTINGS_ACTION = 1;
-    ThemeHandler handler;
+    PreferenceHandler handler;
 
     ImageButton settings_button;
     ImageButton catalogue_button;
     ImageButton all_questions_button;
 
     private Animation mEnlargeAnimation;
-    private Animation mShrinkAnimation;
 
     @SuppressLint("ClickableViewAccessibility")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
-        handler = new ThemeHandler(this);
+        handler = new PreferenceHandler(this);
         handler.Handle();
 
         super.onCreate(savedInstanceState);
@@ -38,7 +40,6 @@ public class MainActivity extends AppCompatActivity{
         all_questions_button = findViewById(R.id.all_questions_button);
 
         mEnlargeAnimation = AnimationUtils.loadAnimation(this, R.anim.button_animation_zoom);
-        mShrinkAnimation = AnimationUtils.loadAnimation(this, R.anim.button_animation_original);
 
         OnClickListener onClickHandler = new OnClickListener() {
             @Override
@@ -55,7 +56,7 @@ public class MainActivity extends AppCompatActivity{
                     case R.id.all_questions_button:
                         //all_questions_button.startAnimation(mShrinkAnimation);
                         //all_questions_button.clearAnimation();
-                        startActivity(new Intent(MainActivity.this, All_Questions.class));
+                        startActivity(new Intent(MainActivity.this, AllQuestions.class));
                         break;
                 }
             }

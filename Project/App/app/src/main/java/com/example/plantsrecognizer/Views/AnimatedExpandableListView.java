@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.example.plantsrecognizer;
+package com.example.plantsrecognizer.Views;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
@@ -151,7 +151,7 @@ public class AnimatedExpandableListView extends ExpandableListView {
      * @return Returns true if the group was expanded. False if the group was
      * already expanded.
      */
-    @SuppressLint("NewApi")
+    @SuppressLint({"NewApi", "ObsoleteSdkInt"})
     public boolean expandGroupWithAnimation(int groupPos) {
         boolean lastGroup = groupPos == adapter.getGroupCount() - 1;
         if (lastGroup && Build.VERSION.SDK_INT >= Build.VERSION_CODES.ICE_CREAM_SANDWICH) {
@@ -263,18 +263,18 @@ public class AnimatedExpandableListView extends ExpandableListView {
         private static final int STATE_IDLE = 0;
         private static final int STATE_EXPANDING = 1;
         private static final int STATE_COLLAPSING = 2;
-        private SparseArray<GroupInfo> groupInfo = new SparseArray<GroupInfo>();
+        private SparseArray<GroupInfo> groupInfo = new SparseArray<>();
         private AnimatedExpandableListView parent;
 
         private void setParent(AnimatedExpandableListView parent) {
             this.parent = parent;
         }
 
-        public int getRealChildType(int groupPosition, int childPosition) {
+        int getRealChildType(int groupPosition, int childPosition) {
             return 0;
         }
 
-        public int getRealChildTypeCount() {
+        int getRealChildTypeCount() {
             return 1;
         }
 
@@ -291,7 +291,7 @@ public class AnimatedExpandableListView extends ExpandableListView {
             return info;
         }
 
-        public void notifyGroupExpanded(int groupPosition) {
+        void notifyGroupExpanded(int groupPosition) {
             GroupInfo info = getGroupInfo(groupPosition);
             info.dummyHeight = -1;
         }
@@ -342,13 +342,13 @@ public class AnimatedExpandableListView extends ExpandableListView {
             return getRealChildTypeCount() + 1;
         }
 
-        protected ViewGroup.LayoutParams generateDefaultLayoutParams() {
+        ViewGroup.LayoutParams generateDefaultLayoutParams() {
             return new LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
                     ViewGroup.LayoutParams.WRAP_CONTENT, 0);
         }
 
         /**
-         * Override {@link #getChildView(int, int, boolean, View, ViewGroup)} instead.
+         * Override {getChildView(int, int, boolean, View, ViewGroup)} instead.
          */
         @Override
         public final View getChildView(final int groupPosition, int childPosition, boolean isLastChild, View convertView, final ViewGroup parent) {
@@ -356,7 +356,7 @@ public class AnimatedExpandableListView extends ExpandableListView {
 
             if (info.animating) {
                 // If this group is animating, return the a DummyView...
-                if (convertView instanceof DummyView == false) {
+                if (!(convertView instanceof DummyView)) {
                     convertView = new DummyView(parent.getContext());
                     convertView.setLayoutParams(new LayoutParams(LayoutParams.MATCH_PARENT, 0));
                 }
@@ -515,7 +515,7 @@ public class AnimatedExpandableListView extends ExpandableListView {
     }
 
     private static class DummyView extends View {
-        private List<View> views = new ArrayList<View>();
+        private List<View> views = new ArrayList<>();
         private Drawable divider;
         private int dividerWidth;
         private int dividerHeight;

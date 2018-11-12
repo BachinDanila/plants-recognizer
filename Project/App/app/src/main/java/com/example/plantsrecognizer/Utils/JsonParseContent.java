@@ -1,7 +1,9 @@
-package com.example.plantsrecognizer;
+package com.example.plantsrecognizer.Utils;
 
 import android.support.v7.app.AppCompatActivity;
 import android.text.Html;
+
+import com.example.plantsrecognizer.Models.JsonModel;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -11,7 +13,7 @@ import java.util.HashMap;
 
 public class JsonParseContent {
 
-    final AppCompatActivity activity;
+    private final AppCompatActivity activity;
 
     private ArrayList<HashMap<String, String>> arraylist;
 
@@ -20,15 +22,15 @@ public class JsonParseContent {
     }
 
     private String charArrayToString(char string[], int max_index) {
-        String new_string = "";
+        StringBuilder new_string = new StringBuilder();
         for (int i = 0; i < max_index; i++) {
-            new_string += string[i];
+            new_string.append(string[i]);
         }
-        return new_string;
+        return new_string.toString();
     }
 
     private String parse_extracts(char string[]) {
-        String new_string = "";
+        StringBuilder new_string = new StringBuilder();
         int max_limit = 159;
         int tmp = max_limit;
         int counter = 0;
@@ -38,16 +40,16 @@ public class JsonParseContent {
                 break;
             }
             else if(string[i] == '—' || string[i] == '-'){
-                new_string = "";
+                new_string = new StringBuilder();
                 i++;
                 if(string[i] == ' '){
                     i++;
                 }
             }
-            new_string += string[i];
+            new_string.append(string[i]);
         }
         if (new_string.length() > max_limit) {
-            string = new_string.toCharArray();
+            string = new_string.toString().toCharArray();
             for (int i = max_limit; i >= 0; i--) {
                 if (string[i] == '.') {
                     tmp = i;
@@ -70,24 +72,23 @@ public class JsonParseContent {
                 string[tmp] = '.';
                 tmp++;
             }
-            new_string = charArrayToString(string, tmp);
+            new_string = new StringBuilder(charArrayToString(string, tmp));
         }
         try {
-            string = new_string.toCharArray();
+            string = new_string.toString().toCharArray();
             string[0] = Character.toUpperCase(string[0]);
-            new_string = charArrayToString(string, string.length);
+            new_string = new StringBuilder(charArrayToString(string, string.length));
         } catch (Exception e) {
             e.printStackTrace();
         }
-        return new_string;
+        return new_string.toString();
     }
 
     public String getTitle(String response) {
         try {
             JSONObject jsonObject = new JSONObject(response);
             JSONObject all_dataobj = jsonObject.getJSONObject("query").getJSONArray("pages").getJSONObject(0);
-            String title = all_dataobj.getString(JsonConstants.Params.TITLE);
-            return title;
+            return all_dataobj.getString(JsonConstants.Params.TITLE);
         } catch (JSONException e) {
             e.printStackTrace();
         }
@@ -99,7 +100,7 @@ public class JsonParseContent {
         int limit = 20;
         try {
             JSONObject jsonObject = new JSONObject(response);
-            arraylist = new ArrayList<HashMap<String, String>>();
+            arraylist = new ArrayList<>();
 
             JSONObject all_dataobj = jsonObject.getJSONObject("query").getJSONArray("pages").getJSONObject(0);
 

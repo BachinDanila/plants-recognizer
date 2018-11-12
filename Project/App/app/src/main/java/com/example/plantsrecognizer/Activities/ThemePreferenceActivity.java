@@ -1,16 +1,19 @@
-package com.example.plantsrecognizer;
+package com.example.plantsrecognizer.Activities;
 
 import android.os.Bundle;
 import android.preference.Preference;
 import android.preference.Preference.OnPreferenceChangeListener;
 import android.preference.PreferenceActivity;
 
+import com.example.plantsrecognizer.R;
+import com.example.plantsrecognizer.Utils.PreferenceHandler;
+
 public class ThemePreferenceActivity extends PreferenceActivity {
 
     public static final int RESULT_CODE_THEME_UPDATED = 1;
     public static final int RESULT_CODE_GALLERY_UPDATED = 1;
 
-    ThemeHandler handler;
+    PreferenceHandler handler;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -24,7 +27,7 @@ public class ThemePreferenceActivity extends PreferenceActivity {
     private class RefreshActivityOnPreferenceChangeListener implements OnPreferenceChangeListener {
         private final int resultCode;
 
-        public RefreshActivityOnPreferenceChangeListener(int resultCode) {
+        RefreshActivityOnPreferenceChangeListener(int resultCode) {
             this.resultCode = resultCode;
         }
 

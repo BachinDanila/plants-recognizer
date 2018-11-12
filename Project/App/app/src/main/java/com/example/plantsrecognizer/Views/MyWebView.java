@@ -1,10 +1,13 @@
-package com.example.plantsrecognizer;
+package com.example.plantsrecognizer.Views;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.util.AttributeSet;
 import android.webkit.WebChromeClient;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
+
+import com.example.plantsrecognizer.Utils.MyWebViewClient;
 
 
 public class MyWebView extends WebView {
@@ -31,6 +34,7 @@ public class MyWebView extends WebView {
     }
 
 
+    @SuppressLint("SetJavaScriptEnabled")
     private void initDefaultSetting() {
         WebSettings webSettings = this.getSettings();
         webSettings.setJavaScriptEnabled(true);

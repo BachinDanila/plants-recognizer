@@ -5,7 +5,7 @@
     android:layout_height="match_parent"
     android:background="?attr/background">
 
-    <com.example.plantsrecognizer.MyWebView
+    <com.example.plantsrecognizer.Views.MyWebView
         android:id="@+id/myWebView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"

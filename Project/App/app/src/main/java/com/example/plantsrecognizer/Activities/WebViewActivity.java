@@ -1,18 +1,24 @@
-package com.example.plantsrecognizer;
+package com.example.plantsrecognizer.Activities;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.webkit.WebSettings;
 
+import com.example.plantsrecognizer.R;
+import com.example.plantsrecognizer.Utils.PreferenceHandler;
+import com.example.plantsrecognizer.Views.MyWebView;
+
 public class WebViewActivity extends AppCompatActivity {
 
-    ThemeHandler handler;
+    PreferenceHandler handler;
 
+    @SuppressLint("SetJavaScriptEnabled")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
-        handler = new ThemeHandler(this);
+        handler = new PreferenceHandler(this);
         handler.Handle();
 
         super.onCreate(savedInstanceState);

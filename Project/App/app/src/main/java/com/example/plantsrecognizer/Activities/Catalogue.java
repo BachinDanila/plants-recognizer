@@ -1,5 +1,6 @@
-package com.example.plantsrecognizer;
+package com.example.plantsrecognizer.Activities;
 
+import android.annotation.SuppressLint;
 import android.app.SearchManager;
 import android.content.Context;
 import android.content.Intent;
@@ -16,6 +17,15 @@ import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.Toast;
 
+import com.example.plantsrecognizer.Adapters.MyListAdapterJson;
+import com.example.plantsrecognizer.Models.JsonModel;
+import com.example.plantsrecognizer.R;
+import com.example.plantsrecognizer.Utils.HttpRequest;
+import com.example.plantsrecognizer.Utils.JsonParseContent;
+import com.example.plantsrecognizer.Utils.JsonUtils;
+import com.example.plantsrecognizer.Utils.PreferenceHandler;
+import com.example.plantsrecognizer.Utils.XlsParser;
+
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
@@ -28,12 +38,12 @@ import java.util.HashMap;
 
 public class Catalogue extends AppCompatActivity implements Serializable {
 
-    final String raw_url = "https://ru.m.wikipedia.org/w/api.php?action=query&prop=pageimages|extracts|pageterms&titles=%s&piprop=original|name|thumbnail&pithumbsize=150&continue=&format=json&formatversion=2";
+    final String raw_url = "https://ru.m.wikipedia.org/w/api.php?action=query&prop=pageimages|extracts|pageterms&titles=%s&piprop=original|name|thumbnail&pithumbsize=80&continue=&format=json&formatversion=2";
     private static final long serialVersionUID = 1L;
     transient MyListAdapterJson JsonAdapter;
     XlsParser xls_parser;
     JsonModel jsonModel;
-    ThemeHandler handler;
+    PreferenceHandler handler;
 
     private transient ListView listView;
     private transient JsonParseContent parseContent;
@@ -44,7 +54,7 @@ public class Catalogue extends AppCompatActivity implements Serializable {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
-        handler = new ThemeHandler(this);
+        handler = new PreferenceHandler(this);
         handler.Handle();
 
         super.onCreate(savedInstanceState);
@@ -59,16 +69,16 @@ public class Catalogue extends AppCompatActivity implements Serializable {
         plants_list = xls_parser.getXlsPlants();
 
         try {
-            for (int i = 0; i < plants_list.length; i++) {
-                jsonModelList.add(read_jsonModel(plants_list[i]));
+            for (String aPlants_list : plants_list) {
+                jsonModelList.add(read_jsonModel(aPlants_list));
             }
             JsonUtils.showSimpleProgressDialog(Catalogue.this);
             ListAdapterInit(jsonModelList);
         } catch (FileNotFoundException e) {
             jsonModelList.clear();
             parseContent = new JsonParseContent(this);
-            for (int i = 0; i < plants_list.length; i++) {
-                parseJson(String.format(raw_url, plants_list[i]));
+            for (String aPlants_list : plants_list) {
+                parseJson(String.format(raw_url, aPlants_list));
             }
         }
     }
@@ -83,6 +93,7 @@ public class Catalogue extends AppCompatActivity implements Serializable {
         Log.v("End ","_____________________________________________________________");
     }
 
+    @SuppressLint("StaticFieldLeak")
     private void parseJson(final String URL) {
 
         if (!JsonUtils.isNetworkAvailable(Catalogue.this)) {
@@ -102,6 +113,7 @@ public class Catalogue extends AppCompatActivity implements Serializable {
                 }
                 return response;
             }
+
             protected void onPostExecute(String result) {
                 //do something with response
                 //Log.d("newwwss",result);
@@ -146,10 +158,8 @@ public class Catalogue extends AppCompatActivity implements Serializable {
             is.close();
             fis.close();
             return jsonmodel;
-        } catch (IOException e) {
+        } catch (IOException | ClassNotFoundException e) {
             e.printStackTrace();
-        } catch (ClassNotFoundException ex) {
-            ex.printStackTrace();
         }
         return null;
     }
@@ -194,6 +204,7 @@ public class Catalogue extends AppCompatActivity implements Serializable {
             searchView = (SearchView) searchItem.getActionView();
         }
         if (searchView != null) {
+            assert searchManager != null;
             searchView.setSearchableInfo(searchManager.getSearchableInfo(getComponentName()));
         }
         return super.onCreateOptionsMenu(menu);
@@ -223,8 +234,8 @@ public class Catalogue extends AppCompatActivity implements Serializable {
             Toast toast = Toast.makeText(this, "Not Found", Toast.LENGTH_SHORT);
             toast.show();
             try {
-                for (int i = 0; i < plants_list.length; i++) {
-                    JsonAdapter.addItem(read_jsonModel(plants_list[i]));
+                for (String aPlants_list : plants_list) {
+                    JsonAdapter.addItem(read_jsonModel(aPlants_list));
                 }
             } catch (FileNotFoundException e) {
                 e.printStackTrace();

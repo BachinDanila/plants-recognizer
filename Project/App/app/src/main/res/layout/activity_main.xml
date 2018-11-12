@@ -7,13 +7,13 @@
     android:layout_height="match_parent"
     android:background="?attr/background"
     android:minWidth="100dp"
-    tools:context=".MainActivity">
+    tools:context=".Activities.MainActivity">
 
     <ImageButton
         android:id="@+id/all_questions_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_gravity="bottom|right"
+        android:layout_gravity="bottom|end"
         android:layout_marginStart="117dp"
         android:layout_marginTop="91dp"
         android:layout_marginEnd="117dp"
@@ -28,13 +28,14 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         android:saveEnabled="false"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        tools:ignore="ContentDescription" />
 
     <ImageButton
         android:id="@+id/settings_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_gravity="bottom|right"
+        android:layout_gravity="bottom|end"
         android:layout_marginStart="21dp"
         android:layout_marginTop="399dp"
         android:layout_marginEnd="267dp"
@@ -49,13 +50,14 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        tools:ignore="ContentDescription" />
 
     <ImageButton
         android:id="@+id/catalogue_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_gravity="bottom|right"
+        android:layout_gravity="bottom|end"
         android:layout_marginStart="150dp"
         android:layout_marginTop="399dp"
         android:layout_marginEnd="21dp"
@@ -69,5 +71,6 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         android:saveEnabled="false"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        tools:ignore="ContentDescription" />
 </android.support.constraint.ConstraintLayout>

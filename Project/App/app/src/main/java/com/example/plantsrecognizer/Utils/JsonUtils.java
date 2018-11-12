@@ -1,4 +1,4 @@
-package com.example.plantsrecognizer;
+package com.example.plantsrecognizer.Utils;
 
 import android.app.ProgressDialog;
 import android.content.Context;
@@ -20,10 +20,6 @@ public class JsonUtils {
                 mProgressDialog.show();
             }
 
-        } catch (IllegalArgumentException ie) {
-            ie.printStackTrace();
-        } catch (RuntimeException re) {
-            re.printStackTrace();
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -39,11 +35,6 @@ public class JsonUtils {
                     mProgressDialog = null;
                 }
             }
-        } catch (IllegalArgumentException ie) {
-            ie.printStackTrace();
-
-        } catch (RuntimeException re) {
-            re.printStackTrace();
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -58,8 +49,8 @@ public class JsonUtils {
         } else {
             NetworkInfo[] info = connectivity.getAllNetworkInfo();
             if (info != null) {
-                for (int i = 0; i < info.length; i++) {
-                    if (info[i].getState() == NetworkInfo.State.CONNECTED) {
+                for (NetworkInfo anInfo : info) {
+                    if (anInfo.getState() == NetworkInfo.State.CONNECTED) {
                         return true;
                     }
                 }

@@ -1,4 +1,4 @@
-package com.example.plantsrecognizer;
+package com.example.plantsrecognizer.Activities;
 
 import android.app.SearchManager;
 import android.content.Context;
@@ -14,6 +14,13 @@ import android.view.View;
 import android.widget.ExpandableListView;
 import android.widget.Toast;
 
+import com.example.plantsrecognizer.Adapters.QuestionsAdapter;
+import com.example.plantsrecognizer.Models.QuestionModel;
+import com.example.plantsrecognizer.R;
+import com.example.plantsrecognizer.Utils.PreferenceHandler;
+import com.example.plantsrecognizer.Utils.XlsParser;
+import com.example.plantsrecognizer.Views.AnimatedExpandableListView;
+
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
@@ -23,7 +30,7 @@ import java.io.ObjectOutputStream;
 import java.io.Serializable;
 import java.util.ArrayList;
 
-public class All_Questions extends AppCompatActivity implements Serializable {
+public class AllQuestions extends AppCompatActivity implements Serializable {
 
     private static final long serialVersionUID = 1L;
     transient QuestionsAdapter questionsAdapter;
@@ -37,7 +44,7 @@ public class All_Questions extends AppCompatActivity implements Serializable {
     @Override
     protected void onCreate(Bundle savedInstanceState){
 
-        ThemeHandler handler = new ThemeHandler(this);
+        PreferenceHandler handler = new PreferenceHandler(this);
         handler.Handle();
 
         super.onCreate(savedInstanceState);

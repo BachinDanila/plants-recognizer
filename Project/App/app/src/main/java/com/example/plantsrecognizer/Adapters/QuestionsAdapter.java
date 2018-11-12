@@ -1,10 +1,14 @@
-package com.example.plantsrecognizer;
+package com.example.plantsrecognizer.Adapters;
 
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+
+import com.example.plantsrecognizer.Models.QuestionModel;
+import com.example.plantsrecognizer.R;
+import com.example.plantsrecognizer.Views.AnimatedExpandableListView;
 
 import java.util.List;
 
@@ -14,7 +18,7 @@ public class QuestionsAdapter extends AnimatedExpandableListView.AnimatedExpanda
     private List<QuestionModel> items;
 
 
-    QuestionsAdapter(Context context) {
+    public QuestionsAdapter(Context context) {
         inflater = LayoutInflater.from(context);
     }
 
@@ -96,12 +100,12 @@ public class QuestionsAdapter extends AnimatedExpandableListView.AnimatedExpanda
         return true;
     }
 
-    void removeGroup(QuestionModel model) {
+    public void removeGroup(QuestionModel model) {
         items.remove(model);
         notifyDataSetChanged();
     }
 
-    void addGroup(QuestionModel model) {
+    public void addGroup(QuestionModel model) {
         items.add(model);
         notifyDataSetChanged();
     }

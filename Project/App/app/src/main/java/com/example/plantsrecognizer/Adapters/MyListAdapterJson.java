@@ -1,4 +1,4 @@
-package com.example.plantsrecognizer;
+package com.example.plantsrecognizer.Adapters;
 
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -7,6 +7,10 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
+
+import com.example.plantsrecognizer.Models.JsonModel;
+import com.example.plantsrecognizer.R;
+import com.example.plantsrecognizer.Utils.ImageLoadTask;
 
 import java.util.ArrayList;
 
@@ -64,6 +68,7 @@ public class MyListAdapterJson extends BaseAdapter {
             LayoutInflater inflater = (LayoutInflater) context
                     .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 
+            assert inflater != null;
             convertView = inflater.inflate(R.layout.row_custom_list, null, true);
 
             holder.ImageView = convertView.findViewById(R.id.imageView);
@@ -90,7 +95,7 @@ public class MyListAdapterJson extends BaseAdapter {
 
     private class ViewHolder {
         protected ImageView ImageView;
-        protected TextView TextViewTitle;
-        protected TextView TextViewDescription;
+        TextView TextViewTitle;
+        TextView TextViewDescription;
     }
 }

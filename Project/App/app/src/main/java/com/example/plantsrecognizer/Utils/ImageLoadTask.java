@@ -1,5 +1,6 @@
-package com.example.plantsrecognizer;
+package com.example.plantsrecognizer.Utils;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -13,8 +14,13 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 
 public class ImageLoadTask extends AsyncTask<Void, Void, Bitmap> {
+
     private final String url;
+
+    @SuppressLint("StaticFieldLeak")
     private final ImageView imageView;
+
+    @SuppressLint("StaticFieldLeak")
     private final Context context;
 
     public ImageLoadTask(String url, ImageView imageView, Context context) {
@@ -34,14 +40,14 @@ public class ImageLoadTask extends AsyncTask<Void, Void, Bitmap> {
     }
 
     private String getFilename(char[] url) {
-        String string = "";
+        StringBuilder string = new StringBuilder();
         for (int i = url.length - 1; i >= 0; i--) {
             if (url[i] == '/') {
                 break;
             }
-            string += url[i];
+            string.append(url[i]);
         }
-        return string;
+        return string.toString();
     }
 
     @Override
@@ -59,6 +65,7 @@ public class ImageLoadTask extends AsyncTask<Void, Void, Bitmap> {
                 connection.connect();
                 InputStream input = connection.getInputStream();
                 Bitmap bitmap = BitmapFactory.decodeStream(input);
+                bitmap = Bitmap.createScaledBitmap(bitmap, 80, 80, true);
                 saveAsBitmap(bitmap, filename);
                 return bitmap;
             } catch (Exception base_e) {

@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     package="com.example.plantsrecognizer">
 
     <uses-permission android:name="android.permission.INTERNET" />
@@ -11,9 +12,12 @@
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
+        android:fullBackupContent="true"
         android:theme="@style/Default">
 
-        <activity android:name=".MainActivity">
+        <activity
+            android:name=".Activities.MainActivity"
+            tools:ignore="InnerclassSeparator">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
                 <category android:name="android.intent.category.DEFAULT" />
@@ -25,13 +29,15 @@
         </activity>
 
         <activity
-            android:name=".HowToUseActivity"
-            android:label="@string/how_to_use_title" />
+            android:name=".Activities.HowToUseActivity"
+            android:label="@string/how_to_use_title"
+            tools:ignore="InnerclassSeparator" />
 
         <activity
-            android:name=".All_Questions"
+            android:name=".Activities.AllQuestions"
             android:label="@string/all_question_title"
-            android:launchMode="singleTop">
+            android:launchMode="singleTop"
+            tools:ignore="InnerclassSeparator">
             <intent-filter>
                 <action android:name="android.intent.action.SEARCH" />
             </intent-filter>
@@ -45,22 +51,26 @@
         </activity>
 
         <activity
-            android:name=".Recommended_questions"
-            android:label="@string/recommended_question_title" />
+            android:name=".Activities.Recommended_questions"
+            android:label="@string/recommended_question_title"
+            tools:ignore="InnerclassSeparator" />
 
         <activity
-            android:name=".ThemePreferenceActivity"
+            android:name=".Activities.ThemePreferenceActivity"
             android:label="@string/title_activity_settings"
-            android:theme="@style/Default" />
+            android:theme="@style/Default"
+            tools:ignore="InnerclassSeparator" />
 
         <activity
-            android:name=".WebViewActivity"
-            android:label="@string/webview_title"/>
+            android:name=".Activities.WebViewActivity"
+            android:label="@string/webview_title"
+            tools:ignore="InnerclassSeparator" />
 
         <activity
-            android:name=".Catalogue"
+            android:name=".Activities.Catalogue"
             android:label="@string/catalogue_title"
-            android:launchMode="singleTop">
+            android:launchMode="singleTop"
+            tools:ignore="InnerclassSeparator">
             <intent-filter>
                 <action android:name="android.intent.action.SEARCH" />
             </intent-filter>

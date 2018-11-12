@@ -4,9 +4,9 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="?attr/background"
-    tools:context=".All_Questions">
+    tools:context=".Activities.AllQuestions">
 
-    <com.example.plantsrecognizer.AnimatedExpandableListView
+    <com.example.plantsrecognizer.Views.AnimatedExpandableListView
         android:id="@+id/expandableListView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

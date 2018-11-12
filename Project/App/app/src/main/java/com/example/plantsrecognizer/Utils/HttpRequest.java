@@ -1,4 +1,4 @@
-package com.example.plantsrecognizer;
+package com.example.plantsrecognizer.Utils;
 
 import android.util.Log;
 
@@ -84,9 +84,9 @@ public class HttpRequest {
      * @return HttpRequest this instance -> for chaining method @see line 22
      * */
     public HttpRequest withHeaders(String... headers){
-        for(int i=0,last=headers.length;i<last;i++) {
-            String[]h=headers[i].split("[:]");
-            con.setRequestProperty(h[0],h[1]);
+        for (String header : headers) {
+            String[] h = header.split("[:]");
+            con.setRequestProperty(h[0], h[1]);
         }
         return this;
     }
@@ -107,7 +107,7 @@ public class HttpRequest {
     public HttpRequest withData(HashMap<String,String> params) throws IOException{
         StringBuilder result=new StringBuilder();
         for(Map.Entry<String,String>entry : params.entrySet()){
-            result.append((result.length()>0?"&":"")+entry.getKey()+"="+entry.getValue());//appends: key=value (for first param) OR &key=value(second and more)
+            result.append(result.length() > 0 ? "&" : "").append(entry.getKey()).append("=").append(entry.getValue());//appends: key=value (for first param) OR &key=value(second and more)
             Log.d("parameters",entry.getKey()+"  ===>  "+ entry.getValue());
         }
         withData(result.toString());
@@ -126,7 +126,7 @@ public class HttpRequest {
     public String sendAndReadString() throws IOException{
         BufferedReader br=new BufferedReader(new InputStreamReader(con.getInputStream()));
         StringBuilder response=new StringBuilder();
-        for(String line;(line=br.readLine())!=null;)response.append(line+"\n");
+        for (String line; (line = br.readLine()) != null; ) response.append(line).append("\n");
         Log.d("ressss",response.toString());
         return response.toString();
     }

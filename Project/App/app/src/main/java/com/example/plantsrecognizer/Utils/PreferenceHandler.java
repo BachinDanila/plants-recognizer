@@ -1,17 +1,19 @@
-package com.example.plantsrecognizer;
+package com.example.plantsrecognizer.Utils;
 
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 
+import com.example.plantsrecognizer.R;
+
 import java.io.Serializable;
 
-public class ThemeHandler implements Serializable {
+public class PreferenceHandler implements Serializable {
 
     private Context context;
     private static final long serialVersionUID = 1L;
 
-    public ThemeHandler(Context current) {
+    public PreferenceHandler(Context current) {
         context = current;
     }
 
@@ -21,12 +23,16 @@ public class ThemeHandler implements Serializable {
 
         String themeName = pref.getString("theme", "Default");
 
-        if (themeName.equals("Light")) {
-            context.setTheme(R.style.Light);
-        } else if (themeName.equals("Dark")) {
-            context.setTheme(R.style.Dark);
-        } else if (themeName.equals("Default")) {
-            context.setTheme(R.style.Default);
+        switch (themeName) {
+            case "Light":
+                context.setTheme(R.style.Light);
+                break;
+            case "Dark":
+                context.setTheme(R.style.Dark);
+                break;
+            case "Default":
+                context.setTheme(R.style.Default);
+                break;
         }
         //Log.v("ThemeName", themeName);
     }
