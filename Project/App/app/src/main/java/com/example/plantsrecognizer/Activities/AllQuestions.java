@@ -35,8 +35,8 @@ public class AllQuestions extends AppCompatActivity implements Serializable {
     private static final long serialVersionUID = 1L;
     transient QuestionsAdapter questionsAdapter;
 
-    XlsParser xls;
-    QuestionModel questionModel;
+    transient XlsParser xls;
+    transient QuestionModel questionModel;
 
     private transient ArrayList<QuestionModel> questionModelList = null;
     private transient String[] allQuestions;
@@ -88,8 +88,9 @@ public class AllQuestions extends AppCompatActivity implements Serializable {
             public boolean onChildClick(ExpandableListView parent, View v, int groupPos, int childPos, long id) {
                 QuestionModel current = questionModelList.get(groupPos);
                 current.setSelectedAnswer(current.getAnswer(childPos));
-                Toast.makeText(getApplicationContext(), current.getQuestion() +
+                Toast.makeText(getApplicationContext(), current.getQuestion() + ": " +
                         current.getSelectedAnswer(), Toast.LENGTH_SHORT).show();
+                listView.collapseGroupWithAnimation(groupPos);
                 return false;
             }
         });
