@@ -38,23 +38,23 @@ import java.util.HashMap;
 
 public class Catalogue extends AppCompatActivity implements Serializable {
 
-    final String raw_url = "https://ru.m.wikipedia.org/w/api.php?action=query&prop=pageimages|extracts|pageterms&titles=%s&piprop=original|name|thumbnail&pithumbsize=80&continue=&format=json&formatversion=2";
+    @SuppressWarnings("FieldCanBeLocal")
+    private final String raw_url = "https://ru.m.wikipedia.org/w/api.php?action=query&" +
+            "prop=pageimages|extracts|pageterms&titles=%s&piprop=original|name|thumbnail&" +
+            "pithumbsize=80&continue=&format=json&formatversion=2";
     private static final long serialVersionUID = 1L;
-    transient MyListAdapterJson JsonAdapter;
-    XlsParser xls_parser;
-    JsonModel jsonModel;
-    PreferenceHandler handler;
+    private final int json_code = 1;
 
     private transient ListView listView;
     private transient JsonParseContent parseContent;
-    private final int jsoncode = 1;
+    private transient MyListAdapterJson JsonAdapter;
     private transient ArrayList<JsonModel> jsonModelList = null;
     private String[] plants_list = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
-        handler = new PreferenceHandler(this);
+        PreferenceHandler handler = new PreferenceHandler(this);
         handler.Handle();
 
         super.onCreate(savedInstanceState);
@@ -65,7 +65,7 @@ public class Catalogue extends AppCompatActivity implements Serializable {
         listView = findViewById(R.id.listView);
         jsonModelList = new ArrayList<>();
 
-        xls_parser = new XlsParser(this);
+        XlsParser xls_parser = new XlsParser(this);
         plants_list = xls_parser.getXlsPlants();
 
         try {
@@ -81,16 +81,6 @@ public class Catalogue extends AppCompatActivity implements Serializable {
                 parseJson(String.format(raw_url, aPlants_list));
             }
         }
-    }
-
-    private void print_log(int index){
-        Log.v("Begin ","_____________________________________________________________");
-        Log.v("Source: ",jsonModelList.get(index).getSource());
-        Log.v("Description: ",jsonModelList.get(index).getDescription());
-        Log.v("Title: ",jsonModelList.get(index).getTitle());
-        Log.v("Height: ",jsonModelList.get(index).getImageHeight());
-        Log.v("Width: ",jsonModelList.get(index).getImageWidth());
-        Log.v("End ","_____________________________________________________________");
     }
 
     @SuppressLint("StaticFieldLeak")
@@ -116,18 +106,16 @@ public class Catalogue extends AppCompatActivity implements Serializable {
 
             protected void onPostExecute(String result) {
                 //do something with response
-                //Log.d("newwwss",result);
-                onTaskCompleted(result,jsoncode);
+                onTaskCompleted(result, json_code);
             }
         }.execute();
     }
 
     private void onTaskCompleted(String response, int serviceCode) {
-        //Log.d("responsejson", response);
         //Log.d("service_code",Integer.toString(serviceCode));
         switch (serviceCode) {
-            case jsoncode:
-                jsonModel = parseContent.getInfo(response);
+            case json_code:
+                JsonModel jsonModel = parseContent.getInfo(response);
                 write_file(jsonModel.getTitle(), jsonModel);
                 jsonModelList.add(jsonModel);
 
@@ -219,17 +207,7 @@ public class Catalogue extends AppCompatActivity implements Serializable {
         }
     }
 
-    private void search(String keyword) {
-        int len = JsonAdapter.getCount();
-        for (int j = 0; j < len; j++) {
-            for (int i = 0; i < JsonAdapter.getCount(); i++) {
-                JsonModel current = (JsonModel) JsonAdapter.getItem(i);
-                String text = current.getTitle().toLowerCase();
-                if (!text.contains(keyword.toLowerCase())) {
-                    JsonAdapter.removeItem(i);
-                }
-            }
-        }
+    private void checkIfNotFound() {
         if (JsonAdapter.getCount() == 0) {
             Toast toast = Toast.makeText(this, "Not Found", Toast.LENGTH_SHORT);
             toast.show();
@@ -242,6 +220,20 @@ public class Catalogue extends AppCompatActivity implements Serializable {
             }
             //Log.d("SERIALISED", model.getTitle());
         }
+    }
+
+    private void search(String keyword) {
+        int len = JsonAdapter.getCount();
+        for (int j = 0; j < len; j++) {
+            for (int i = 0; i < JsonAdapter.getCount(); i++) {
+                JsonModel current = (JsonModel) JsonAdapter.getItem(i);
+                String text = current.getTitle().toLowerCase();
+                if (!text.contains(keyword.toLowerCase())) {
+                    JsonAdapter.removeItem(i);
+                }
+            }
+        }
+        checkIfNotFound();
     }
 
     @Override

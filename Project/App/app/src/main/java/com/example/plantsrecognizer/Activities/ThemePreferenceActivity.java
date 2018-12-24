@@ -6,20 +6,20 @@ import android.preference.Preference.OnPreferenceChangeListener;
 import android.preference.PreferenceActivity;
 
 import com.example.plantsrecognizer.R;
-import com.example.plantsrecognizer.Utils.PreferenceHandler;
 
 public class ThemePreferenceActivity extends PreferenceActivity {
 
     public static final int RESULT_CODE_THEME_UPDATED = 1;
-    public static final int RESULT_CODE_GALLERY_UPDATED = 1;
-
-    PreferenceHandler handler;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
         super.onCreate(savedInstanceState);
+
+        //TODO: Solve problem with deprecated methods
+        //noinspection deprecation
         addPreferencesFromResource(R.xml.preferences);
+        //noinspection deprecation
         findPreference("theme").
                 setOnPreferenceChangeListener(new RefreshActivityOnPreferenceChangeListener(RESULT_CODE_THEME_UPDATED));
     }

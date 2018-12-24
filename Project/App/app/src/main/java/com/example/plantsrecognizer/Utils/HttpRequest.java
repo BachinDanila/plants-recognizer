@@ -19,11 +19,10 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class HttpRequest {
-    private final URL url;
     //After instantiation, when opening connection - IOException can occur
     private HttpRequest(URL url) throws IOException {
-        this.url=url;
-        con = (HttpURLConnection)this.url.openConnection();
+        URL url1 = url;
+        con = (HttpURLConnection) url1.openConnection();
     }
 
     private HttpURLConnection con;
@@ -33,22 +32,22 @@ public class HttpRequest {
      * Writes query to open stream to server
      *
      * @param query String params in format of key1=v1&key2=v2 to open stream to server
-     * @return HttpRequest this instance -> for chaining method @see line 22
+     * //@return HttpRequest this instance -> for chaining method @see line 22
      * @throws IOException - should be checked by caller
      */
-    private HttpRequest withData(String query) throws IOException {
+    private void withData(String query) throws IOException {
         BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(os, "UTF-8"));
         writer.write(query);
         writer.close();
-        return this;
     }
+
     //Can be instantiated with String representation of url, force caller to check for IOException which can be thrown
     public HttpRequest(String url)throws IOException{ this(new URL(url)); Log.d("parameters", url); }
 
     /**
      * Sending connection and opening an output stream to server by pre-defined instance variable url
      *
-     * @param //isPost boolean - indicates whether this request should be sent in POST method
+     * isPost boolean - indicates whether this request should be sent in POST method
      * @throws IOException - should be checked by caller
      * */
     private void prepareAll(Method method)throws IOException{
@@ -59,12 +58,14 @@ public class HttpRequest {
             os = con.getOutputStream();
         }
     }
+
     //prepare request in GET method
     //@return HttpRequest this instance -> for chaining method @see line 22
     public HttpRequest prepare() throws IOException{
         prepareAll(Method.GET);
         return this;
     }
+
     /**
      * Prepares HttpRequest method with for given method, possible values: HttpRequest.Method.POST,
      * HttpRequest.Method.PUT, HttpRequest.Method.GET & HttpRequest.Method.DELETE
@@ -77,6 +78,7 @@ public class HttpRequest {
         prepareAll(method);
         return this;
     }
+
     /**
      * Adding request headers (standard format "Key":"Value")
      *
@@ -95,10 +97,11 @@ public class HttpRequest {
     public enum Method {
         POST, PUT, DELETE, GET
     }
+
     /**
      * Builds query on format of key1=v1&key2=v2 from given hashMap structure
-     * for map: {name=Bubu, age=29} -> builds "name=Bubu&age=29"
-     * for map: {Iam=Groot} -> builds "Iam=Groot"
+     * for map: {name=Dan, age=16} -> builds "name=Dan&age=16"
+     * for map: {Iam=Dan} -> builds "Iam=Dan"
      *
      * @param params HashMap consists of key-> value pairs to build query from
      * @return HttpRequest this instance -> for chaining method @see line 22
@@ -107,16 +110,19 @@ public class HttpRequest {
     public HttpRequest withData(HashMap<String,String> params) throws IOException{
         StringBuilder result=new StringBuilder();
         for(Map.Entry<String,String>entry : params.entrySet()){
-            result.append(result.length() > 0 ? "&" : "").append(entry.getKey()).append("=").append(entry.getValue());//appends: key=value (for first param) OR &key=value(second and more)
+            //appends: key=value (for first param) OR &key=value(second and more)
+            result.append(result.length() > 0 ? "&" : "").append(entry.getKey()).append("=").append(entry.getValue());
             Log.d("parameters",entry.getKey()+"  ===>  "+ entry.getValue());
         }
         withData(result.toString());
         return this;
     }
+
     //When caller only need to send, and don't need String response from server
     public int send() throws IOException{
         return con.getResponseCode(); //return HTTP status code to indicate whether it successfully sent
     }
+
     /**
      * Sending request to the server and pass to caller String as it received in response from server
      *
@@ -127,9 +133,9 @@ public class HttpRequest {
         BufferedReader br=new BufferedReader(new InputStreamReader(con.getInputStream()));
         StringBuilder response=new StringBuilder();
         for (String line; (line = br.readLine()) != null; ) response.append(line).append("\n");
-        Log.d("ressss",response.toString());
         return response.toString();
     }
+
     /**
      * Sending request to the server and pass to caller its raw contents in bytes as it received from server.
      *
@@ -143,6 +149,7 @@ public class HttpRequest {
         for (int bytesRead;(bytesRead=is.read(buffer))>=0;)output.write(buffer, 0, bytesRead);
         return output.toByteArray();
     }
+
     //JSONObject representation of String response from server
     public JSONObject sendAndReadJSON() throws JSONException, IOException{
         return new JSONObject(sendAndReadString());

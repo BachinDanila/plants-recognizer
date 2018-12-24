@@ -278,9 +278,9 @@ public class AnimatedExpandableListView extends ExpandableListView {
             return 1;
         }
 
-        public abstract View getRealChildView(int groupPosition, int childPosition, boolean isLastChild, View convertView, ViewGroup parent);
+        protected abstract View getRealChildView(int groupPosition, int childPosition, boolean isLastChild, View convertView, ViewGroup parent);
 
-        public abstract int getRealChildrenCount(int groupPosition);
+        protected abstract int getRealChildrenCount(int groupPosition);
 
         private GroupInfo getGroupInfo(int groupPosition) {
             GroupInfo info = groupInfo.get(groupPosition);
@@ -524,7 +524,7 @@ public class AnimatedExpandableListView extends ExpandableListView {
             super(context);
         }
 
-        public void setDivider(Drawable divider, int dividerWidth, int dividerHeight) {
+        void setDivider(Drawable divider, int dividerWidth, int dividerHeight) {
             if (divider != null) {
                 this.divider = divider;
                 this.dividerWidth = dividerWidth;
@@ -539,7 +539,7 @@ public class AnimatedExpandableListView extends ExpandableListView {
          *
          * @param childView View to draw
          */
-        public void addFakeView(View childView) {
+        void addFakeView(View childView) {
             childView.layout(0, 0, getWidth(), childView.getMeasuredHeight());
             views.add(childView);
         }
@@ -554,7 +554,7 @@ public class AnimatedExpandableListView extends ExpandableListView {
             }
         }
 
-        public void clearViews() {
+        void clearViews() {
             views.clear();
         }
 

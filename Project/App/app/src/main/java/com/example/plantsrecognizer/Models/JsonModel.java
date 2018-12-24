@@ -8,9 +8,9 @@ public class JsonModel implements Serializable {
     private String title = "";
     private String description = "";
     private String source = "";
-    private String imageheight = "";
-    private String imagewidth = "";
-    private String pageimage = "";
+    private String image_height = "";
+    private String image_width = "";
+    private String page_image = "";
 
     public String getTitle() {
         return title;
@@ -20,40 +20,12 @@ public class JsonModel implements Serializable {
         this.title = title;
     }
 
-    public String getPageImage(){
-        return pageimage;
-    }
-
-    public void setPageImage(String pageimage){
-        this.pageimage = pageimage;
-    }
-
     public String getSource(){
         return source;
     }
 
-    public String getImageWidth() {
-        return imagewidth;
-    }
-
-    public void setImageWidth(String imagewidth) {
-        this.imagewidth = imagewidth;
-    }
-
-    public String getImageHeight() {
-        return imageheight;
-    }
-
-    public void setImageHeight(String imageheight) {
-        this.imageheight = imageheight;
-    }
-
     public void setSource(String source){
         this.source = source;
-    }
-
-    public void setSource(String raw_url,String source){
-        this.source = raw_url + source;
     }
 
     public String getDescription() {
@@ -64,9 +36,39 @@ public class JsonModel implements Serializable {
         this.description = description;
     }
 
+    //TODO: Remove unused blocks of code when finish
+    /*
+    public String getImageWidth() {
+        return image_width;
+    }
+
+    public void setImageWidth(String image_width) {
+        this.image_width = image_width;
+    }
+
+    public String getImageHeight() {
+        return image_height;
+    }
+
+    public void setImageHeight(String image_height) {
+        this.image_height = image_height;
+    }
+
+    public void setSource(String raw_url,String source){
+        this.source = raw_url + source;
+    }
+
+    public void setPageImage(String page_image){
+        this.page_image = page_image;
+    }
+
+    public String getPageImage(){
+        return page_image;
+    }
+
     public byte[] getBytes() {
         String result_string = title + ";" + description + ";" + source;
         return result_string.getBytes();
     }
-
+    */
 }

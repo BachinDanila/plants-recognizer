@@ -9,6 +9,7 @@ import android.widget.ImageView;
 
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
+import java.io.IOException;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
@@ -33,7 +34,8 @@ public class ImageLoadTask extends AsyncTask<Void, Void, Bitmap> {
         try {
             FileOutputStream out;
             out = context.openFileOutput(filename, Context.MODE_PRIVATE);
-            bitmap.compress(Bitmap.CompressFormat.PNG, 100, out); // ставить 85 бесполезно, PNG - это формат сжатия без потерь
+            bitmap.compress(Bitmap.CompressFormat.PNG, 100, out);
+            // ставить 85 бесполезно, PNG - это формат сжатия без потерь
             out.close();
         } catch (Exception ignored) {
         }
@@ -50,21 +52,27 @@ public class ImageLoadTask extends AsyncTask<Void, Void, Bitmap> {
         return string.toString();
     }
 
+    private Bitmap getImageFromUrl(String url) throws IOException {
+        URL urlConnection = new URL(url);
+        HttpURLConnection connection = (HttpURLConnection) urlConnection
+                .openConnection();
+        connection.setDoInput(true);
+        connection.connect();
+        InputStream input = connection.getInputStream();
+        return BitmapFactory.decodeStream(input);
+    }
+
     @Override
     protected Bitmap doInBackground(Void... params) {
         String filename = getFilename(url.toCharArray());
         try {
+            //Read image from file
             InputStream input = context.openFileInput(filename);
             return BitmapFactory.decodeStream(input);
         } catch (FileNotFoundException e) {
+            //Read image from url link
             try {
-                URL urlConnection = new URL(url);
-                HttpURLConnection connection = (HttpURLConnection) urlConnection
-                        .openConnection();
-                connection.setDoInput(true);
-                connection.connect();
-                InputStream input = connection.getInputStream();
-                Bitmap bitmap = BitmapFactory.decodeStream(input);
+                Bitmap bitmap = getImageFromUrl(url);
                 bitmap = Bitmap.createScaledBitmap(bitmap, 80, 80, true);
                 saveAsBitmap(bitmap, filename);
                 return bitmap;

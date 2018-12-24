@@ -1,5 +1,6 @@
 package com.example.plantsrecognizer.Adapters;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -59,6 +60,7 @@ public class MyListAdapterJson extends BaseAdapter {
         return 0;
     }
 
+    @SuppressLint("InflateParams")
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         ViewHolder holder;
@@ -94,7 +96,7 @@ public class MyListAdapterJson extends BaseAdapter {
     }
 
     private class ViewHolder {
-        protected ImageView ImageView;
+        ImageView ImageView;
         TextView TextViewTitle;
         TextView TextViewDescription;
     }

@@ -10,7 +10,7 @@ import java.io.Serializable;
 
 public class PreferenceHandler implements Serializable {
 
-    private Context context;
+    private final Context context;
     private static final long serialVersionUID = 1L;
 
     public PreferenceHandler(Context current) {
@@ -23,6 +23,7 @@ public class PreferenceHandler implements Serializable {
 
         String themeName = pref.getString("theme", "Default");
 
+        assert themeName != null;
         switch (themeName) {
             case "Light":
                 context.setTheme(R.style.Light);

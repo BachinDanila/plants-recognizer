@@ -17,11 +17,10 @@ import com.example.plantsrecognizer.Utils.PreferenceHandler;
 public class MainActivity extends AppCompatActivity{
 
     private final int SETTINGS_ACTION = 1;
-    PreferenceHandler handler;
 
-    ImageButton settings_button;
-    ImageButton catalogue_button;
-    ImageButton all_questions_button;
+    private ImageButton settings_button;
+    private ImageButton catalogue_button;
+    private ImageButton all_questions_button;
 
     private Animation mEnlargeAnimation;
 
@@ -29,7 +28,7 @@ public class MainActivity extends AppCompatActivity{
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
-        handler = new PreferenceHandler(this);
+        PreferenceHandler handler = new PreferenceHandler(this);
         handler.Handle();
 
         super.onCreate(savedInstanceState);
@@ -46,7 +45,8 @@ public class MainActivity extends AppCompatActivity{
             public void onClick(View v) {
                 switch (v.getId()) {
                     case R.id.settings_button:
-                        startActivityForResult(new Intent(MainActivity.this, ThemePreferenceActivity.class), SETTINGS_ACTION);
+                        startActivityForResult(new Intent(MainActivity.this,
+                                ThemePreferenceActivity.class), SETTINGS_ACTION);
                         break;
 
                     case R.id.catalogue_button:
@@ -54,8 +54,6 @@ public class MainActivity extends AppCompatActivity{
                         break;
 
                     case R.id.all_questions_button:
-                        //all_questions_button.startAnimation(mShrinkAnimation);
-                        //all_questions_button.clearAnimation();
                         startActivity(new Intent(MainActivity.this, AllQuestions.class));
                         break;
                 }

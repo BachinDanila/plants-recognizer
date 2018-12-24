@@ -27,13 +27,6 @@ public class MyWebView extends WebView {
         initDefaultSetting();
     }
 
-    public MyWebView(Context context, AttributeSet attrs, int defStyleAttr,
-                     int defStyleRes) {
-        super(context, attrs, defStyleAttr, defStyleRes);
-        initDefaultSetting();
-    }
-
-
     @SuppressLint("SetJavaScriptEnabled")
     private void initDefaultSetting() {
         WebSettings webSettings = this.getSettings();
@@ -42,11 +35,18 @@ public class MyWebView extends WebView {
         setWebViewClient(new MyWebViewClient());
     }
 
-    /**
-     * Load Web View with url
-     */
+    //TODO: Remove unused blocks of code when finish
+    /*
+    public MyWebView(Context context, AttributeSet attrs, int defStyleAttr,
+                     int defStyleRes) {
+        super(context, attrs, defStyleAttr, defStyleRes);
+        initDefaultSetting();
+    }
+
+    //Load Web View with url
     public void load(String url) {
         this.loadUrl(url);
     }
+    */
 
 }

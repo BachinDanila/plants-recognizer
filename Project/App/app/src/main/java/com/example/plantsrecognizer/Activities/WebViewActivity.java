@@ -12,13 +12,11 @@ import com.example.plantsrecognizer.Views.MyWebView;
 
 public class WebViewActivity extends AppCompatActivity {
 
-    PreferenceHandler handler;
-
     @SuppressLint("SetJavaScriptEnabled")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
-        handler = new PreferenceHandler(this);
+        PreferenceHandler handler = new PreferenceHandler(this);
         handler.Handle();
 
         super.onCreate(savedInstanceState);

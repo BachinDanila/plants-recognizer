@@ -17,6 +17,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
@@ -32,13 +33,21 @@ public class XlsParser {
 
     public XlsParser(Context current) {
         this.context = current;
-        setXlsQuestions(file_init(0));
-        setXlsPlants(file_init(0));
-        setXlsAnswers(file_init(0));
+        setXlsQuestions(fileInit(0));
+        setXlsPlants(fileInit(0));
+        setXlsAnswers(fileInit(0));
     }
 
     public String[] getXlsQuestions() {
         return xlsQuestions.toArray(new String[xlsPlants.size()]);
+    }
+
+    public String[] getXlsPlants() {
+        return xlsPlants.toArray(new String[xlsPlants.size()]);
+    }
+
+    public ArrayList<String> getXlsAnswers(String key) {
+        return xlsAnswers.get(key);
     }
 
     private void setXlsQuestions(Sheet sheet) {
@@ -49,15 +58,10 @@ public class XlsParser {
             for (int i = 1; i < tmp; i++) {
                 xlsQuestions.add(row.getCell(i).getStringCellValue());
             }
-            //Log.d("XLS: ", xls_names.toString());
             this.number_of_questions = xlsQuestions.size();
         } catch (Exception ex) {
             ex.printStackTrace();
         }
-    }
-
-    public String[] getXlsPlants() {
-        return xlsPlants.toArray(new String[xlsPlants.size()]);
     }
 
     private void setXlsPlants(Sheet sheet) {
@@ -66,18 +70,13 @@ public class XlsParser {
                 Row row = sheet.getRow(i);
                 xlsPlants.add(row.getCell(0).getStringCellValue());
             }
-            //Log.d("XLS: ", xls_plants.toString());
         } catch (Exception ex) {
             ex.printStackTrace();
         }
     }
 
-    public ArrayList<String> getXlsAnswers(String key) {
-        return xlsAnswers.get(key);
-    }
-
-    private Sheet file_init(int pageNumber) {
-        //открываем фай
+    private Sheet fileInit(int pageNumber) {
+        //открываем файл
         InputStream ins = context.getResources().openRawResource(R.raw.data);
         Workbook wb = null;
         try {
@@ -85,43 +84,74 @@ public class XlsParser {
         } catch (IOException | InvalidFormatException e) {
             e.printStackTrace();
         }
-        //перем первую страницу
+        //берем первую страницу
         return Objects.requireNonNull(wb).getSheetAt(pageNumber);
     }
 
+    private String getStringFromXls(Row row, int index) {
+        String current_string;
+        try {
+            current_string = row.getCell(index).getStringCellValue();
+            if (!current_string.equals("-")) {
+                current_string = setFirstSymUpper(current_string);
+            } else {
+                current_string = "Не знаю/Не могу определить";
+            }
+
+        } catch (IllegalStateException e) {
+            //If value equivalent to int
+            current_string = Integer.toString((int) row.getCell(index).getNumericCellValue());
+        }
+        return current_string;
+    }
+
+    private void parseStringFromXls(String raw_string) {
+        if (raw_string.contains(",")) {
+            String[] raw_array = raw_string.split(",");
+            for (String element : raw_array) {
+                set.add(setFirstSymUpper(element));
+            }
+        } else {
+            set.add(raw_string);
+        }
+    }
+
+    private void initEmptyQuestion() {
+        //В Столбце с вопросом о древовидности дерева нет значений
+        //Инициализация этих значений в коде
+        //TODO: Delete initialisation from code and update xls file
+        for (String value : xlsQuestions) {
+            if (value.equals("Древовидный ли ствол")) {
+                set.add("Не древовидный");
+                set.add("Не знаю/Не могу определить");
+            }
+        }
+    }
+
+    private ArrayList<String> getSetConvert() {
+        List<String> convert;
+        convert = Arrays.asList(set.toArray(new String[set.size()]));
+        ArrayList<String> converted = new ArrayList<>(convert);
+        return converted;
+    }
+
+    private void getDataFromXls(Row row, int index) {
+
+        String raw_string = getStringFromXls(row, index);
+        parseStringFromXls(raw_string);
+        initEmptyQuestion(); //TODO: Delete this string later
+
+        xlsAnswers.put(xlsQuestions.get(index - 1), getSetConvert());
+        set.clear();
+    }
+
     private void setXlsAnswers(Sheet sheet) {
-        String raw_string;
         try {
             for (int i = 1; i <= number_of_questions; i++) {
                 for (int j = 1; j < index_max; j++) {
                     Row row = sheet.getRow(j);
-                    try {
-                        raw_string = row.getCell(i).getStringCellValue();
-                        if (!raw_string.equals("-")) {
-                            raw_string = setFirstSymUpper(raw_string);
-                        } else {
-                            raw_string = "Не знаю/Не могу определить";
-                        }
-                    } catch (IllegalStateException e) {
-                        raw_string = Integer.toString((int) row.getCell(i).getNumericCellValue());
-                    }
-                    if (raw_string.contains(",")) {
-                        String[] raw_array = raw_string.split(",");
-                        for (String element : raw_array) {
-                            set.add(setFirstSymUpper(element));
-                        }
-                    } else {
-                        set.add(raw_string);
-                    }
+                    getDataFromXls(row, i);
                 }
-
-                if (xlsQuestions.get(i - 1).equals("Древовидный ли ствол")) {
-                    set.add("Не древовидный");
-                    set.add("Не знаю/Не могу определить");
-                }
-
-                xlsAnswers.put(xlsQuestions.get(i - 1), new ArrayList<>(Arrays.asList(set.toArray(new String[set.size()]))));
-                set.clear();
             }
         } catch (Exception ex) {
             ex.printStackTrace();

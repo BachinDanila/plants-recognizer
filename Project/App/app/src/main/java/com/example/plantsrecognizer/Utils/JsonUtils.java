@@ -24,9 +24,11 @@ public class JsonUtils {
             e.printStackTrace();
         }
     }
+
     public static void showSimpleProgressDialog(Context context) {
-        showSimpleProgressDialog(context, null, "Loading...", false);
+        showSimpleProgressDialog(context, null, "Loading data from WiKi...", false);
     }
+
     public static void removeSimpleProgressDialog() {
         try {
             if (mProgressDialog != null) {
@@ -38,7 +40,6 @@ public class JsonUtils {
         } catch (Exception e) {
             e.printStackTrace();
         }
-
     }
 
     public static boolean isNetworkAvailable(Context context) {
@@ -47,6 +48,8 @@ public class JsonUtils {
         if (connectivity == null) {
             return false;
         } else {
+            //TODO: Solve problem with deprecated methods
+            //noinspection deprecation
             NetworkInfo[] info = connectivity.getAllNetworkInfo();
             if (info != null) {
                 for (NetworkInfo anInfo : info) {
@@ -58,4 +61,5 @@ public class JsonUtils {
         }
         return false;
     }
+
 }

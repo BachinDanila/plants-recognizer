@@ -33,10 +33,7 @@ import java.util.ArrayList;
 public class AllQuestions extends AppCompatActivity implements Serializable {
 
     private static final long serialVersionUID = 1L;
-    transient QuestionsAdapter questionsAdapter;
-
-    transient XlsParser xls;
-    transient QuestionModel questionModel;
+    private transient QuestionsAdapter questionsAdapter;
 
     private transient ArrayList<QuestionModel> questionModelList = null;
     private transient String[] allQuestions;
@@ -44,26 +41,26 @@ public class AllQuestions extends AppCompatActivity implements Serializable {
     @Override
     protected void onCreate(Bundle savedInstanceState){
 
-        PreferenceHandler handler = new PreferenceHandler(this);
-        handler.Handle();
+        PreferenceHandler handler = new PreferenceHandler(this);    //Used for read current preference data
+        handler.Handle();                                                   //Handles changes to the settings
 
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.all_question);
+        setContentView(R.layout.all_question);      //Initialize Activity
 
-        handleIntent(getIntent());
+        handleIntent(getIntent());                  //Check intent to handle the search key click
 
-        xls = new XlsParser(this);
-        allQuestions = xls.getXlsQuestions();
-        questionModelList = new ArrayList<>();
+        XlsParser xls = new XlsParser(this);
+        allQuestions = xls.getXlsQuestions();       //Get all questions
+        questionModelList = new ArrayList<>();      //Create List which contains Question Models. Used in custom adapter
 
         try {
             for (String filename : allQuestions) {
-                questionModelList.add(readQuestionModel(filename));
+                questionModelList.add(readQuestionModel(filename)); //Read serialized object and add it to list
             }
-        } catch (FileNotFoundException exc) {
+        } catch (FileNotFoundException exc) {       //Activated if no serialized object was found
             try {
                 for (String question : allQuestions) {
-                    questionModel = new QuestionModel();
+                    QuestionModel questionModel = new QuestionModel();
                     questionModel.setQuestion(question);
                     questionModel.setAnswers(xls.getXlsAnswers(question));
                     questionModelList.add(questionModel);
@@ -77,6 +74,7 @@ public class AllQuestions extends AppCompatActivity implements Serializable {
             e.printStackTrace();
         }
 
+        //Set up Animated Expandable List View with custom adapter
         final AnimatedExpandableListView listView = findViewById(R.id.expandableListView);
         questionsAdapter = new QuestionsAdapter(this);
         questionsAdapter.setData(questionModelList);
@@ -115,11 +113,15 @@ public class AllQuestions extends AppCompatActivity implements Serializable {
         });
     }
 
+    //New intent used to handle search button click activity
+    //Used for starting handler
     @Override
     protected void onNewIntent(Intent intent) {
         handleIntent(intent);
     }
 
+    //Intent which activates when user press search button
+    //Write search request to Log
     private void handleIntent(Intent intent) {
 
         if (Intent.ACTION_SEARCH.equals(intent.getAction())) {
@@ -129,6 +131,7 @@ public class AllQuestions extends AppCompatActivity implements Serializable {
         }
     }
 
+    //Search in ExpandableListView
     private void search(String keyword) {
         int len = questionsAdapter.getGroupCount();
         for (int j = 0; j < len; j++) {
@@ -141,6 +144,12 @@ public class AllQuestions extends AppCompatActivity implements Serializable {
                 }
             }
         }
+        checkIfNotFound();
+    }
+
+    private void checkIfNotFound() {
+        //If the element was not found
+        //Used only in @search
         if (questionsAdapter.getGroupCount() == 0) {
             Toast toast = Toast.makeText(this, "Not Found", Toast.LENGTH_SHORT);
             toast.show();
@@ -154,6 +163,7 @@ public class AllQuestions extends AppCompatActivity implements Serializable {
         }
     }
 
+    //Write Question model data to file
     private void write_file(QuestionModel object) {
         String filename = object.getQuestion();
         try {
@@ -167,6 +177,9 @@ public class AllQuestions extends AppCompatActivity implements Serializable {
         }
     }
 
+    //Read Question model from serialized object
+    //Filename equals to plant name
+    //If throws FileNotFoundException create new file with serialized object
     private QuestionModel readQuestionModel(String filename) throws FileNotFoundException {
         FileInputStream fis = openFileInput(filename);
         try {
@@ -181,6 +194,7 @@ public class AllQuestions extends AppCompatActivity implements Serializable {
         return null;
     }
 
+    //Create options menu for search activity
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater menuInflater = getMenuInflater();
         menuInflater.inflate(R.menu.dashboard, menu);

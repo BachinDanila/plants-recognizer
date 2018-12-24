@@ -13,7 +13,7 @@ import com.example.plantsrecognizer.Views.AnimatedExpandableListView;
 import java.util.List;
 
 public class QuestionsAdapter extends AnimatedExpandableListView.AnimatedExpandableListAdapter {
-    private LayoutInflater inflater;
+    private final LayoutInflater inflater;
 
     private List<QuestionModel> items;
 
