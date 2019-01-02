@@ -24,12 +24,11 @@ public class MainActivity extends AppCompatActivity{
 
     private Animation mEnlargeAnimation;
 
-    @SuppressLint("ClickableViewAccessibility")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
-        PreferenceHandler handler = new PreferenceHandler(this);
-        handler.Handle();
+        PreferenceHandler preferences = new PreferenceHandler(this);
+        preferences.setTheme();
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
@@ -40,6 +39,19 @@ public class MainActivity extends AppCompatActivity{
 
         mEnlargeAnimation = AnimationUtils.loadAnimation(this, R.anim.button_animation_zoom);
 
+        OnClickListener onClickHandler = getOnClickHandler();
+
+        setCatalogueButtonOnTouchListener();
+        setSettingsButtonOnTouchListener();
+        setQuestionsButtonOnTouchListener();
+
+        catalogue_button.setOnClickListener(onClickHandler);
+        settings_button.setOnClickListener(onClickHandler);
+        all_questions_button.setOnClickListener(onClickHandler);
+
+    }
+
+    private OnClickListener getOnClickHandler() {
         OnClickListener onClickHandler = new OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -59,7 +71,11 @@ public class MainActivity extends AppCompatActivity{
                 }
             }
         };
+        return onClickHandler;
+    }
 
+    @SuppressLint("ClickableViewAccessibility")
+    private void setCatalogueButtonOnTouchListener() {
         catalogue_button.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
@@ -75,23 +91,10 @@ public class MainActivity extends AppCompatActivity{
                 return true;
             }
         });
+    }
 
-        settings_button.setOnTouchListener(new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View v, MotionEvent event) {
-                switch (event.getAction()) {
-                    case MotionEvent.ACTION_DOWN:
-                        settings_button.startAnimation(mEnlargeAnimation);
-                        break;
-
-                    case MotionEvent.ACTION_UP:
-                        v.performClick();
-                        break;
-                }
-                return true;
-            }
-        });
-
+    @SuppressLint("ClickableViewAccessibility")
+    private void setQuestionsButtonOnTouchListener() {
         all_questions_button.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
@@ -109,12 +112,27 @@ public class MainActivity extends AppCompatActivity{
                 return true;
             }
         });
-
-        catalogue_button.setOnClickListener(onClickHandler);
-        settings_button.setOnClickListener(onClickHandler);
-        all_questions_button.setOnClickListener(onClickHandler);
-
     }
+
+    @SuppressLint("ClickableViewAccessibility")
+    private void setSettingsButtonOnTouchListener() {
+        settings_button.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                switch (event.getAction()) {
+                    case MotionEvent.ACTION_DOWN:
+                        settings_button.startAnimation(mEnlargeAnimation);
+                        break;
+
+                    case MotionEvent.ACTION_UP:
+                        v.performClick();
+                        break;
+                }
+                return true;
+            }
+        });
+    }
+
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == SETTINGS_ACTION) {

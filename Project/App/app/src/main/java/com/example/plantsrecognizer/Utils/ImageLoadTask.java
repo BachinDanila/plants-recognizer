@@ -73,7 +73,7 @@ public class ImageLoadTask extends AsyncTask<Void, Void, Bitmap> {
             //Read image from url link
             try {
                 Bitmap bitmap = getImageFromUrl(url);
-                bitmap = Bitmap.createScaledBitmap(bitmap, 80, 80, true);
+                //bitmap = Bitmap.createScaledBitmap(bitmap, 80, 80, true);
                 saveAsBitmap(bitmap, filename);
                 return bitmap;
             } catch (Exception base_e) {

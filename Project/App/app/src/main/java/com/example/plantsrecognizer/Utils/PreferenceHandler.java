@@ -3,6 +3,7 @@ package com.example.plantsrecognizer.Utils;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
+import android.support.v4.widget.SwipeRefreshLayout;
 
 import com.example.plantsrecognizer.R;
 
@@ -17,7 +18,7 @@ public class PreferenceHandler implements Serializable {
         context = current;
     }
 
-    public void Handle() {
+    public void setTheme() {
         SharedPreferences pref = PreferenceManager
                 .getDefaultSharedPreferences(context);
 
@@ -35,6 +36,36 @@ public class PreferenceHandler implements Serializable {
                 context.setTheme(R.style.Default);
                 break;
         }
-        //Log.v("ThemeName", themeName);
+
     }
+
+    public String getSwipeRefreshLayoutTheme() {
+        SharedPreferences pref = PreferenceManager
+                .getDefaultSharedPreferences(context);
+        String swipeThemeName = pref.getString("swipeTheme", "Default");
+
+        assert swipeThemeName != null;
+        return swipeThemeName;
+    }
+
+    public void setSwipeRefreshLayoutTheme(String swipeThemeName, SwipeRefreshLayout mSwipeRefreshLayout) {
+        //Log.d("SwipeThemeName", swipeThemeName);
+        switch (swipeThemeName) {
+            case "Dark":
+                //Dark theme enabled by default
+                break;
+            case "Blue":
+                mSwipeRefreshLayout.setColorSchemeResources(R.color.light_blue,
+                        R.color.middle_blue,
+                        R.color.deep_blue);
+                break;
+            case "Default":
+                mSwipeRefreshLayout.setColorSchemeResources(android.R.color.holo_blue_bright,
+                        android.R.color.holo_green_light,
+                        android.R.color.holo_orange_light,
+                        android.R.color.holo_red_light);
+                break;
+        }
+    }
+
 }

@@ -7,16 +7,16 @@
         <item>Default</item>
     </string-array>
 
+    <string-array name="swipeThemes">
+        <item>Default</item>
+        <item>Dark</item>
+        <item>Blue</item>
+    </string-array>
+
     <string-array name="gallery">
         <item>A</item>
         <item>B</item>
         <item>C</item>
     </string-array>
-
-    <string name="OK">OK</string>
-    <string name="def_theme">AppTheme</string>
-    <string name="theme_summary">Appearance</string>
-    <string name="theme_dialog_title">Theme</string>
-    <string name="settings">Settings</string>
 
 </resources>

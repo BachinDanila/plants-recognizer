@@ -75,6 +75,7 @@ public class XlsParser {
         }
     }
 
+    @SuppressWarnings("SameParameterValue")
     private Sheet fileInit(int pageNumber) {
         //открываем файл
         InputStream ins = context.getResources().openRawResource(R.raw.data);

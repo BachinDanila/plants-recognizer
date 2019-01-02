@@ -16,8 +16,8 @@ public class WebViewActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
-        PreferenceHandler handler = new PreferenceHandler(this);
-        handler.Handle();
+        PreferenceHandler preferences = new PreferenceHandler(this);
+        preferences.setTheme();
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.row_my_web);

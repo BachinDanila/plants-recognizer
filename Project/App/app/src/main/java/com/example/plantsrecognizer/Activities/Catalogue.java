@@ -6,6 +6,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.SearchView;
 import android.util.Log;
@@ -46,6 +47,8 @@ public class Catalogue extends AppCompatActivity implements Serializable {
     private final int json_code = 1;
 
     private transient ListView listView;
+    private SwipeRefreshLayout mSwipeRefreshLayout;
+
     private transient JsonParseContent parseContent;
     private transient MyListAdapterJson JsonAdapter;
     private transient ArrayList<JsonModel> jsonModelList = null;
@@ -54,8 +57,9 @@ public class Catalogue extends AppCompatActivity implements Serializable {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
-        PreferenceHandler handler = new PreferenceHandler(this);
-        handler.Handle();
+        PreferenceHandler preferences = new PreferenceHandler(this);
+        String swipeThemeName = preferences.getSwipeRefreshLayoutTheme();
+        preferences.setTheme();
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.catalogue);
@@ -68,9 +72,31 @@ public class Catalogue extends AppCompatActivity implements Serializable {
         XlsParser xls_parser = new XlsParser(this);
         plants_list = xls_parser.getXlsPlants();
 
+        mSwipeRefreshLayout = findViewById(R.id.swipeRefreshLayout);
+
+        preferences.setSwipeRefreshLayoutTheme(swipeThemeName, mSwipeRefreshLayout);
+
+        setSwipeRefreshLayoutListener();
+
+        showCatalogueData();
+    }
+
+    private void setSwipeRefreshLayoutListener() {
+        mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                //mList.add(currentDateTime);
+                //mListView.invalidateViews();
+                Toast.makeText(Catalogue.this, "Page Updated", Toast.LENGTH_SHORT).show();
+                mSwipeRefreshLayout.setRefreshing(false);
+            }
+        });
+    }
+
+    private void showCatalogueData() {
         try {
             for (String aPlants_list : plants_list) {
-                jsonModelList.add(read_jsonModel(aPlants_list));
+                jsonModelList.add(readJsonModel(aPlants_list));
             }
             JsonUtils.showSimpleProgressDialog(Catalogue.this);
             ListAdapterInit(jsonModelList);
@@ -83,14 +109,19 @@ public class Catalogue extends AppCompatActivity implements Serializable {
         }
     }
 
-    @SuppressLint("StaticFieldLeak")
     private void parseJson(final String URL) {
 
         if (!JsonUtils.isNetworkAvailable(Catalogue.this)) {
             Toast.makeText(Catalogue.this, "Internet is required!", Toast.LENGTH_SHORT).show();
             return;
         }
+
         JsonUtils.showSimpleProgressDialog(Catalogue.this);
+        responseJson(URL);
+    }
+
+    @SuppressLint("StaticFieldLeak")
+    private void responseJson(final String URL) {
         new AsyncTask<Void, Void, String>(){
             protected String doInBackground(Void[] params) {
                 String response;
@@ -111,12 +142,13 @@ public class Catalogue extends AppCompatActivity implements Serializable {
         }.execute();
     }
 
-    private void onTaskCompleted(String response, int serviceCode) {
+    private void onTaskCompleted(String response,
+                                 @SuppressWarnings("SameParameterValue") int serviceCode) {
         //Log.d("service_code",Integer.toString(serviceCode));
         switch (serviceCode) {
             case json_code:
                 JsonModel jsonModel = parseContent.getInfo(response);
-                write_file(jsonModel.getTitle(), jsonModel);
+                writeFile(jsonModel.getTitle(), jsonModel);
                 jsonModelList.add(jsonModel);
 
                 if(jsonModelList.size() == plants_list.length){
@@ -126,7 +158,7 @@ public class Catalogue extends AppCompatActivity implements Serializable {
         }
     }
 
-    private void write_file(String filename, JsonModel object) {
+    private void writeFile(String filename, JsonModel object) {
         try {
             FileOutputStream fos = openFileOutput(filename, Context.MODE_PRIVATE);
             ObjectOutputStream os = new ObjectOutputStream(fos);
@@ -138,7 +170,7 @@ public class Catalogue extends AppCompatActivity implements Serializable {
         }
     }
 
-    private JsonModel read_jsonModel(String filename) throws FileNotFoundException {
+    private JsonModel readJsonModel(String filename) throws FileNotFoundException {
         FileInputStream fis = openFileInput(filename);
         try {
             ObjectInputStream is = new ObjectInputStream(fis);
@@ -161,6 +193,12 @@ public class Catalogue extends AppCompatActivity implements Serializable {
         } catch (Exception e) {
             e.printStackTrace();
         }
+        setListViewOnItemClickLisener();
+    }
+
+    private void setListViewOnItemClickLisener() {
+        //Click on Image with pict.
+        //Open Wikipedia page
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
@@ -213,7 +251,7 @@ public class Catalogue extends AppCompatActivity implements Serializable {
             toast.show();
             try {
                 for (String aPlants_list : plants_list) {
-                    JsonAdapter.addItem(read_jsonModel(aPlants_list));
+                    JsonAdapter.addItem(readJsonModel(aPlants_list));
                 }
             } catch (FileNotFoundException e) {
                 e.printStackTrace();

@@ -37,22 +37,73 @@ public class AllQuestions extends AppCompatActivity implements Serializable {
 
     private transient ArrayList<QuestionModel> questionModelList = null;
     private transient String[] allQuestions;
+    private XlsParser xls;
+    private AnimatedExpandableListView listView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState){
 
-        PreferenceHandler handler = new PreferenceHandler(this);    //Used for read current preference data
-        handler.Handle();                                                   //Handles changes to the settings
+        PreferenceHandler preferences = new PreferenceHandler(this);     //Used for read current preference data
+        preferences.setTheme();                                                 //Handles changes to the settings
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.all_question);      //Initialize Activity
 
         handleIntent(getIntent());                  //Check intent to handle the search key click
 
-        XlsParser xls = new XlsParser(this);
+        xls = new XlsParser(this);
         allQuestions = xls.getXlsQuestions();       //Get all questions
         questionModelList = new ArrayList<>();      //Create List which contains Question Models. Used in custom adapter
 
+        //Set up Animated Expandable List View with custom adapter
+        listView = findViewById(R.id.expandableListView);
+        questionsAdapter = new QuestionsAdapter(this);
+        questionsAdapter.setData(questionModelList);
+        listView.setAdapter(questionsAdapter);
+
+        setQuestions();
+
+        setExpandableListViewOnChildClickListener();
+        setExpandableListViewOnGroupClickListener();
+    }
+
+    private void setExpandableListViewOnChildClickListener() {
+        listView.setOnChildClickListener(new ExpandableListView.OnChildClickListener() {
+
+            @Override
+            public boolean onChildClick(ExpandableListView parent, View v, int groupPos, int childPos, long id) {
+                QuestionModel current = questionModelList.get(groupPos);
+                current.setSelectedAnswer(current.getAnswer(childPos));
+                Toast.makeText(getApplicationContext(), current.getQuestion() + ": " +
+                        current.getSelectedAnswer(), Toast.LENGTH_SHORT).show();
+                listView.collapseGroupWithAnimation(groupPos);
+                return false;
+            }
+        });
+    }
+
+    private void setExpandableListViewOnGroupClickListener() {
+        // In order to show animations, we need to use a custom click handler
+        // for our ExpandableListView.
+        listView.setOnGroupClickListener(new ExpandableListView.OnGroupClickListener() {
+
+            @Override
+            public boolean onGroupClick(ExpandableListView parent, View v, int groupPosition, long id) {
+                // We call collapseGroupWithAnimation(int) and
+                // expandGroupWithAnimation(int) to animate group
+                // expansion/collapse.
+                if (listView.isGroupExpanded(groupPosition)) {
+                    listView.collapseGroupWithAnimation(groupPosition);
+                } else {
+                    listView.expandGroupWithAnimation(groupPosition);
+                }
+                return true;
+            }
+
+        });
+    }
+
+    private void setQuestions() {
         try {
             for (String filename : allQuestions) {
                 questionModelList.add(readQuestionModel(filename)); //Read serialized object and add it to list
@@ -73,44 +124,6 @@ public class AllQuestions extends AppCompatActivity implements Serializable {
         } catch (Exception e) {
             e.printStackTrace();
         }
-
-        //Set up Animated Expandable List View with custom adapter
-        final AnimatedExpandableListView listView = findViewById(R.id.expandableListView);
-        questionsAdapter = new QuestionsAdapter(this);
-        questionsAdapter.setData(questionModelList);
-        listView.setAdapter(questionsAdapter);
-
-        listView.setOnChildClickListener(new ExpandableListView.OnChildClickListener() {
-
-            @Override
-            public boolean onChildClick(ExpandableListView parent, View v, int groupPos, int childPos, long id) {
-                QuestionModel current = questionModelList.get(groupPos);
-                current.setSelectedAnswer(current.getAnswer(childPos));
-                Toast.makeText(getApplicationContext(), current.getQuestion() + ": " +
-                        current.getSelectedAnswer(), Toast.LENGTH_SHORT).show();
-                listView.collapseGroupWithAnimation(groupPos);
-                return false;
-            }
-        });
-
-        // In order to show animations, we need to use a custom click handler
-        // for our ExpandableListView.
-        listView.setOnGroupClickListener(new ExpandableListView.OnGroupClickListener() {
-
-            @Override
-            public boolean onGroupClick(ExpandableListView parent, View v, int groupPosition, long id) {
-                // We call collapseGroupWithAnimation(int) and
-                // expandGroupWithAnimation(int) to animate group
-                // expansion/collapse.
-                if (listView.isGroupExpanded(groupPosition)) {
-                    listView.collapseGroupWithAnimation(groupPosition);
-                } else {
-                    listView.expandGroupWithAnimation(groupPosition);
-                }
-                return true;
-            }
-
-        });
     }
 
     //New intent used to handle search button click activity

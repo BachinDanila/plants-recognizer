@@ -10,6 +10,7 @@ import com.example.plantsrecognizer.R;
 public class ThemePreferenceActivity extends PreferenceActivity {
 
     public static final int RESULT_CODE_THEME_UPDATED = 1;
+    public static final int RESULT_CODE_SWIPE_THEME_UPDATED = 2;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -22,6 +23,9 @@ public class ThemePreferenceActivity extends PreferenceActivity {
         //noinspection deprecation
         findPreference("theme").
                 setOnPreferenceChangeListener(new RefreshActivityOnPreferenceChangeListener(RESULT_CODE_THEME_UPDATED));
+        //noinspection deprecation
+        findPreference("swipeTheme").
+                setOnPreferenceChangeListener(new RefreshActivityOnPreferenceChangeListener(RESULT_CODE_SWIPE_THEME_UPDATED));
     }
 
     private class RefreshActivityOnPreferenceChangeListener implements OnPreferenceChangeListener {
