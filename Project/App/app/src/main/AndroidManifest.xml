@@ -56,7 +56,7 @@
             tools:ignore="InnerclassSeparator" />
 
         <activity
-            android:name=".Activities.ThemePreferenceActivity"
+            android:name=".Activities.CustomPreferenceActivity"
             android:label="@string/title_activity_settings"
             android:theme="@style/Default"
             tools:ignore="InnerclassSeparator" />

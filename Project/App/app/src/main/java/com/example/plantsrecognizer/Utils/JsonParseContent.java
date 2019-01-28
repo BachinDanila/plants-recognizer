@@ -179,7 +179,9 @@ public class JsonParseContent {
         String title;
         JSONObject all_data_object;
         try {
+
             all_data_object = getJsonData(response);
+            title = getTitle(all_data_object);
 
             try{
                 description = getDescription(all_data_object);
@@ -187,10 +189,13 @@ public class JsonParseContent {
                 jsonModel.setDescription(description);
             } catch (JSONException | SmallDescriptionException e) {
                 description = getExtracts(all_data_object);
+                //TODO: remove hardcoded string
+                if (title.equals("Клён")) {
+                    description = "Род древесных растений семейства Сапиндовые (Sapindaceae)";
+                }
                 jsonModel.setDescription(description);
             }
 
-            title = getTitle(all_data_object);
             jsonModel.setTitle(title);
 
             source = getSourceLink(all_data_object);

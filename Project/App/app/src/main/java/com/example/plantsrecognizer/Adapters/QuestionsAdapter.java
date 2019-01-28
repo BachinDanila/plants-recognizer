@@ -24,6 +24,7 @@ public class QuestionsAdapter extends AnimatedExpandableListView.AnimatedExpanda
 
     public void setData(List<QuestionModel> items) {
         this.items = items;
+        this.notifyDataSetChanged();
     }
 
     @Override
@@ -108,6 +109,11 @@ public class QuestionsAdapter extends AnimatedExpandableListView.AnimatedExpanda
     public void addGroup(QuestionModel model) {
         items.add(model);
         notifyDataSetChanged();
+    }
+
+    public void clear() {
+        items.clear();
+        this.notifyDataSetChanged();
     }
 
     private class ChildHolder {

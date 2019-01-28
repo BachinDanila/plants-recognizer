@@ -4,6 +4,7 @@ import android.app.SearchManager;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.SearchView;
 import android.util.Log;
@@ -35,15 +36,17 @@ public class AllQuestions extends AppCompatActivity implements Serializable {
     private static final long serialVersionUID = 1L;
     private transient QuestionsAdapter questionsAdapter;
 
-    private transient ArrayList<QuestionModel> questionModelList = null;
+    private transient ArrayList<QuestionModel> questionModelList;
     private transient String[] allQuestions;
-    private XlsParser xls;
-    private AnimatedExpandableListView listView;
+    private transient SwipeRefreshLayout mSwipeRefreshLayout;
+    private transient XlsParser xls;
+    private transient AnimatedExpandableListView listView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState){
 
         PreferenceHandler preferences = new PreferenceHandler(this);     //Used for read current preference data
+        String swipeThemeName = preferences.getSwipeRefreshLayoutTheme();
         preferences.setTheme();                                                 //Handles changes to the settings
 
         super.onCreate(savedInstanceState);
@@ -55,16 +58,32 @@ public class AllQuestions extends AppCompatActivity implements Serializable {
         allQuestions = xls.getXlsQuestions();       //Get all questions
         questionModelList = new ArrayList<>();      //Create List which contains Question Models. Used in custom adapter
 
+        mSwipeRefreshLayout = findViewById(R.id.swipeRefreshLayoutMain);
+        preferences.setSwipeRefreshLayoutTheme(swipeThemeName, mSwipeRefreshLayout);
+        setSwipeRefreshLayoutListener();
+
         //Set up Animated Expandable List View with custom adapter
         listView = findViewById(R.id.expandableListView);
         questionsAdapter = new QuestionsAdapter(this);
-        questionsAdapter.setData(questionModelList);
-        listView.setAdapter(questionsAdapter);
 
         setQuestions();
 
+        questionsAdapter.setData(questionModelList);
+        listView.setAdapter(questionsAdapter);
+
         setExpandableListViewOnChildClickListener();
         setExpandableListViewOnGroupClickListener();
+    }
+
+    private void setSwipeRefreshLayoutListener() {
+        mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                mSwipeRefreshLayout.setRefreshing(true);
+                Log.d("Question", questionModelList.get(0).toString());
+                mSwipeRefreshLayout.setRefreshing(false);
+            }
+        });
     }
 
     private void setExpandableListViewOnChildClickListener() {
@@ -106,23 +125,25 @@ public class AllQuestions extends AppCompatActivity implements Serializable {
     private void setQuestions() {
         try {
             for (String filename : allQuestions) {
-                questionModelList.add(readQuestionModel(filename)); //Read serialized object and add it to list
+                if (filename != null)
+                    questionModelList.add(readQuestionModel(filename)); //Read serialized object and add it to list
             }
         } catch (FileNotFoundException exc) {       //Activated if no serialized object was found
             try {
                 for (String question : allQuestions) {
+                    assert question != null;
                     QuestionModel questionModel = new QuestionModel();
                     questionModel.setQuestion(question);
                     questionModel.setAnswers(xls.getXlsAnswers(question));
                     questionModelList.add(questionModel);
-                    write_file(questionModel);
+                    writeFile(questionModel);
                 }
             } catch (Exception e) {
                 e.printStackTrace();
                 e.getCause();
             }
         } catch (Exception e) {
-            e.printStackTrace();
+            Log.d("QuestionModel", e.getMessage());
         }
     }
 
@@ -140,7 +161,6 @@ public class AllQuestions extends AppCompatActivity implements Serializable {
         if (Intent.ACTION_SEARCH.equals(intent.getAction())) {
             String query = intent.getStringExtra(SearchManager.QUERY);
             search(query);
-            Log.d("SEARCH", query);
         }
     }
 
@@ -151,7 +171,6 @@ public class AllQuestions extends AppCompatActivity implements Serializable {
             for (int i = 0; i < questionsAdapter.getGroupCount(); i++) {
                 QuestionModel current = questionsAdapter.getGroup(i);
                 String text = current.getQuestion().toLowerCase();
-                Log.d("SEARCH", text + " " + keyword);
                 if (!text.contains(keyword.toLowerCase())) {
                     questionsAdapter.removeGroup(current);
                 }
@@ -177,8 +196,9 @@ public class AllQuestions extends AppCompatActivity implements Serializable {
     }
 
     //Write Question model data to file
-    private void write_file(QuestionModel object) {
+    private void writeFile(QuestionModel object) {
         String filename = object.getQuestion();
+        assert filename != null;
         try {
             FileOutputStream fos = openFileOutput(filename, Context.MODE_PRIVATE);
             ObjectOutputStream os = new ObjectOutputStream(fos);
@@ -198,6 +218,7 @@ public class AllQuestions extends AppCompatActivity implements Serializable {
         try {
             ObjectInputStream is = new ObjectInputStream(fis);
             QuestionModel model = (QuestionModel) is.readObject();
+            Log.d("QuestionModel", model.toString());
             is.close();
             fis.close();
             return model;

@@ -58,7 +58,7 @@ public class MainActivity extends AppCompatActivity{
                 switch (v.getId()) {
                     case R.id.settings_button:
                         startActivityForResult(new Intent(MainActivity.this,
-                                ThemePreferenceActivity.class), SETTINGS_ACTION);
+                                CustomPreferenceActivity.class), SETTINGS_ACTION);
                         break;
 
                     case R.id.catalogue_button:
@@ -136,7 +136,7 @@ public class MainActivity extends AppCompatActivity{
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == SETTINGS_ACTION) {
-            if (resultCode == ThemePreferenceActivity.RESULT_CODE_THEME_UPDATED) {
+            if (resultCode == CustomPreferenceActivity.RESULT_CODE_THEME_UPDATED) {
                 finish();
                 startActivity(getIntent());
                 return;

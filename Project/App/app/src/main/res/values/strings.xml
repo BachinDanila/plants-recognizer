@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Plantsrecognizer</string>
+    <string name="app_name">PlantsRecognizer</string>
     <string name="about_text">About Page</string>
     <string name="about_title">About Title</string>
     <string name="how_to_use_text">How To Use Text</string>
@@ -13,6 +13,8 @@
     <string name="catalogue_button">Catalogue</string>
     <string name="title_activity_settings">Settings</string>
     <string name="settings_button_text">Settings</string>
+
+    <string name="update_button">Update Button</string>
 
     <string name="webview_title">WebView</string>
 

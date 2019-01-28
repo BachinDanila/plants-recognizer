@@ -113,19 +113,7 @@ public class XlsParser {
                 set.add(setFirstSymUpper(element));
             }
         } else {
-            set.add(raw_string);
-        }
-    }
-
-    private void initEmptyQuestion() {
-        //В Столбце с вопросом о древовидности дерева нет значений
-        //Инициализация этих значений в коде
-        //TODO: Delete initialisation from code and update xls file
-        for (String value : xlsQuestions) {
-            if (value.equals("Древовидный ли ствол")) {
-                set.add("Не древовидный");
-                set.add("Не знаю/Не могу определить");
-            }
+            set.add(setFirstSymUpper(raw_string));
         }
     }
 
@@ -140,10 +128,8 @@ public class XlsParser {
 
         String raw_string = getStringFromXls(row, index);
         parseStringFromXls(raw_string);
-        initEmptyQuestion(); //TODO: Delete this string later
 
         xlsAnswers.put(xlsQuestions.get(index - 1), getSetConvert());
-        set.clear();
     }
 
     private void setXlsAnswers(Sheet sheet) {
@@ -153,6 +139,7 @@ public class XlsParser {
                     Row row = sheet.getRow(j);
                     getDataFromXls(row, i);
                 }
+                set.clear();
             }
         } catch (Exception ex) {
             ex.printStackTrace();

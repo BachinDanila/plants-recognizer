@@ -55,6 +55,16 @@ public class MyListAdapterJson extends BaseAdapter {
         this.notifyDataSetChanged();
     }
 
+    public void addArray(ArrayList<JsonModel> list) {
+        JsonModelArrayList.addAll(list);
+        this.notifyDataSetChanged();
+    }
+
+    public void clear() {
+        JsonModelArrayList.clear();
+        this.notifyDataSetChanged();
+    }
+
     @Override
     public long getItemId(int position) {
         return 0;

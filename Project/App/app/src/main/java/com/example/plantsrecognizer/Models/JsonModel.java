@@ -1,5 +1,7 @@
 package com.example.plantsrecognizer.Models;
 
+import android.support.annotation.NonNull;
+
 import java.io.Serializable;
 
 public class JsonModel implements Serializable {
@@ -34,6 +36,11 @@ public class JsonModel implements Serializable {
 
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    @NonNull
+    public String toString() {
+        return title + ":\n" + description + "\n" + source;
     }
 
     //TODO: Remove unused blocks of code when finish

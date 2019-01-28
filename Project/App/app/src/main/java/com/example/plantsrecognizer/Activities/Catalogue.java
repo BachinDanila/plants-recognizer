@@ -73,7 +73,6 @@ public class Catalogue extends AppCompatActivity implements Serializable {
         plants_list = xls_parser.getXlsPlants();
 
         mSwipeRefreshLayout = findViewById(R.id.swipeRefreshLayout);
-
         preferences.setSwipeRefreshLayoutTheme(swipeThemeName, mSwipeRefreshLayout);
 
         setSwipeRefreshLayoutListener();
@@ -85,12 +84,22 @@ public class Catalogue extends AppCompatActivity implements Serializable {
         mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                //mList.add(currentDateTime);
-                //mListView.invalidateViews();
-                Toast.makeText(Catalogue.this, "Page Updated", Toast.LENGTH_SHORT).show();
+                mSwipeRefreshLayout.setRefreshing(true);
+                updateCurrentData();
                 mSwipeRefreshLayout.setRefreshing(false);
             }
         });
+    }
+
+    private void updateCurrentData() {
+        JsonAdapter.clear();
+        for (String name : plants_list) {
+            try {
+                JsonAdapter.addItem(readJsonModel(name));
+            } catch (FileNotFoundException e) {
+                e.printStackTrace();
+            }
+        }
     }
 
     private void showCatalogueData() {
@@ -102,6 +111,10 @@ public class Catalogue extends AppCompatActivity implements Serializable {
             ListAdapterInit(jsonModelList);
         } catch (FileNotFoundException e) {
             jsonModelList.clear();
+            if (!JsonUtils.isNetworkAvailable(Catalogue.this)) {
+                Toast.makeText(Catalogue.this, "Internet is required!", Toast.LENGTH_SHORT).show();
+                return;
+            }
             parseContent = new JsonParseContent(this);
             for (String aPlants_list : plants_list) {
                 parseJson(String.format(raw_url, aPlants_list));
@@ -110,12 +123,6 @@ public class Catalogue extends AppCompatActivity implements Serializable {
     }
 
     private void parseJson(final String URL) {
-
-        if (!JsonUtils.isNetworkAvailable(Catalogue.this)) {
-            Toast.makeText(Catalogue.this, "Internet is required!", Toast.LENGTH_SHORT).show();
-            return;
-        }
-
         JsonUtils.showSimpleProgressDialog(Catalogue.this);
         responseJson(URL);
     }
@@ -206,6 +213,11 @@ public class Catalogue extends AppCompatActivity implements Serializable {
                     Object o = listView.getItemAtPosition(position);
                     JsonModel thisJsonModel = (JsonModel) o;
                     String Title = thisJsonModel.getTitle();
+
+                    if (!JsonUtils.isNetworkAvailable(Catalogue.this)) {
+                        Toast.makeText(Catalogue.this, "Internet is required!", Toast.LENGTH_SHORT).show();
+                        return;
+                    }
                     //Toast.makeText(getBaseContext(),Title,Toast.LENGTH_SHORT).show();
                     Intent intent = new Intent(Catalogue.this, WebViewActivity.class);
                     intent.putExtra("Title", Title);
