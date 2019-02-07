@@ -10,6 +10,7 @@ import android.preference.PreferenceActivity;
 import android.widget.Toast;
 
 import com.example.plantsrecognizer.Models.JsonModel;
+import com.example.plantsrecognizer.Models.QuestionModel;
 import com.example.plantsrecognizer.R;
 import com.example.plantsrecognizer.Utils.HttpRequest;
 import com.example.plantsrecognizer.Utils.JsonParseContent;
@@ -34,13 +35,14 @@ public class CustomPreferenceActivity extends PreferenceActivity {
     private String[] plants_list;
     private JsonParseContent parseContent;
     private int numOfCompletedTasks = 0;
+    private XlsParser xlsParser;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
         super.onCreate(savedInstanceState);
 
-        XlsParser xlsParser = new XlsParser(this);
+        xlsParser = new XlsParser(this);
         plants_list = xlsParser.getXlsPlants();
 
         parseContent = new JsonParseContent(this);
@@ -66,7 +68,44 @@ public class CustomPreferenceActivity extends PreferenceActivity {
         });
     }
 
+    private void updateQuestions() {
+        String[] allQuestions = xlsParser.getXlsQuestions();       //Get all questions
+        try {
+            for (String question : allQuestions) {
+                assert question != null;
+                QuestionModel questionModel = new QuestionModel();
+                questionModel.setQuestion(question);
+                questionModel.setAnswers(xlsParser.getXlsAnswers(question));
+                writeFile(questionModel);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            e.getCause();
+        }
+    }
+
+    //Write Question model data to file
+    private void writeFile(QuestionModel object) {
+        String filename = object.getQuestion();
+        assert filename != null;
+        try {
+            FileOutputStream fos = openFileOutput(filename, Context.MODE_PRIVATE);
+            ObjectOutputStream os = new ObjectOutputStream(fos);
+            os.writeObject(object);
+            os.close();
+            fos.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+
     private void updateAppData() {
+        updateWikiData();
+        updateQuestions();
+    }
+
+    private void updateWikiData() {
         if (!JsonUtils.isNetworkAvailable(this)) {
             Toast.makeText(this, "Internet is required!", Toast.LENGTH_SHORT).show();
             return;

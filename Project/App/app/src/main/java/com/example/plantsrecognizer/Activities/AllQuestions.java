@@ -33,13 +33,13 @@ import java.util.ArrayList;
 
 public class AllQuestions extends AppCompatActivity implements Serializable {
 
-    private static final long serialVersionUID = 1L;
+    private static final long serialVersionUID = 2L;
     private transient QuestionsAdapter questionsAdapter;
 
-    private transient ArrayList<QuestionModel> questionModelList;
-    private transient String[] allQuestions;
+    private ArrayList<QuestionModel> questionModelList;
+    private String[] allQuestions;
     private transient SwipeRefreshLayout mSwipeRefreshLayout;
-    private transient XlsParser xls;
+    private XlsParser xls;
     private transient AnimatedExpandableListView listView;
 
     @Override
@@ -80,7 +80,7 @@ public class AllQuestions extends AppCompatActivity implements Serializable {
             @Override
             public void onRefresh() {
                 mSwipeRefreshLayout.setRefreshing(true);
-                Log.d("Question", questionModelList.get(0).toString());
+                updateData();
                 mSwipeRefreshLayout.setRefreshing(false);
             }
         });
@@ -185,13 +185,18 @@ public class AllQuestions extends AppCompatActivity implements Serializable {
         if (questionsAdapter.getGroupCount() == 0) {
             Toast toast = Toast.makeText(this, "Not Found", Toast.LENGTH_SHORT);
             toast.show();
-            try {
-                for (String allQuestion : allQuestions) {
-                    questionsAdapter.addGroup(readQuestionModel(allQuestion));
-                }
-            } catch (FileNotFoundException e) {
-                e.printStackTrace();
+            updateData();
+        }
+    }
+
+    private void updateData() {
+        try {
+            questionsAdapter.clear();
+            for (String filename : allQuestions) {
+                questionsAdapter.addGroup(readQuestionModel(filename));
             }
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 
@@ -214,6 +219,7 @@ public class AllQuestions extends AppCompatActivity implements Serializable {
     //Filename equals to plant name
     //If throws FileNotFoundException create new file with serialized object
     private QuestionModel readQuestionModel(String filename) throws FileNotFoundException {
+        assert filename != null;
         FileInputStream fis = openFileInput(filename);
         try {
             ObjectInputStream is = new ObjectInputStream(fis);
