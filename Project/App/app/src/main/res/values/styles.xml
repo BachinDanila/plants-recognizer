@@ -31,4 +31,10 @@
         <item name="textSize">15sp</item>
     </style>
 
+    <style name="CustomAnimationButton" parent="@style/Widget.AppCompat.Button">
+        <item name="colorButtonNormal">#1a237e</item>
+        <item name="colorControlHighlight">#673ab7</item>
+        <item name="android:stateListAnimator">@animator/send_button</item>
+    </style>
+
 </resources>
