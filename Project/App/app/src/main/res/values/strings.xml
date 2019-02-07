@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">PlantsRecognizer</string>
+    <string name="app_name">Plants Recognizer</string>
     <string name="about_text">About Page</string>
     <string name="about_title">About Title</string>
     <string name="how_to_use_text">How To Use Text</string>
